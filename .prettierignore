@@ -1,0 +1,6 @@
+# Ignore artifacts:
+/*.js
+node_modules
+build
+coverage
+dist
