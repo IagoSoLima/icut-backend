@@ -1,0 +1,29 @@
+/*
+  Warnings:
+
+  - You are about to drop the column `ID_TYPE_USER` on the `USER` table. All the data in the column will be lost.
+  - Added the required column `FK_ID_TYPE_USER` to the `USER` table without a default value. This is not possible if the table is not empty.
+
+*/
+-- DropForeignKey
+ALTER TABLE "USER" DROP CONSTRAINT "USER_ID_TYPE_USER_fkey";
+
+-- AlterTable
+ALTER TABLE "USER" DROP COLUMN "ID_TYPE_USER",
+ADD COLUMN     "FK_ID_TYPE_USER" INTEGER NOT NULL;
+
+-- CreateTable
+CREATE TABLE "TELEPHONE" (
+    "ID_TELEPHONE" SERIAL NOT NULL,
+    "NR_TELEPHONE" TEXT NOT NULL,
+    "DS_TELEPHONE" TEXT NOT NULL,
+    "FK_ID_USER" INTEGER NOT NULL,
+
+    CONSTRAINT "TELEPHONE_pkey" PRIMARY KEY ("ID_TELEPHONE")
+);
+
+-- AddForeignKey
+ALTER TABLE "USER" ADD CONSTRAINT "USER_FK_ID_TYPE_USER_fkey" FOREIGN KEY ("FK_ID_TYPE_USER") REFERENCES "TYPE_USER"("ID_TYPE_USER") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TELEPHONE" ADD CONSTRAINT "TELEPHONE_FK_ID_USER_fkey" FOREIGN KEY ("FK_ID_USER") REFERENCES "USER"("ID_USER") ON DELETE RESTRICT ON UPDATE CASCADE;

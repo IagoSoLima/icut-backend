@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import { AppLogger } from '~/app.logger';
@@ -13,6 +14,19 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, new ExpressAdapter(), {
       logger: new AppLogger()
     });
+    const config = new DocumentBuilder()
+
+      .setTitle('ICut - API')
+
+      .setDescription('The Median API description')
+
+      .setVersion('0.1')
+
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+
+    SwaggerModule.setup('swagger', app, document);
     await app.listen(4000);
     app.enableVersioning({
       type: VersioningType.URI,
