@@ -10,17 +10,20 @@ import {
   HttpStatus
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiNoContentResponse } from '@nestjs/swagger';
+import { ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
-
+@ApiTags('Usuarios')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: UserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: UserDto) {
+    var response = await this.usersService.create(createUserDto);
+
+    if (Array.isArray(response)) {
+      throw new HttpException(response, HttpStatus.PRECONDITION_FAILED);
+    }
   }
 
   @Get()
@@ -42,7 +45,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 

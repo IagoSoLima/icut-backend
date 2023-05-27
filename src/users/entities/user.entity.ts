@@ -12,24 +12,11 @@ export class UserEntity {
       (this.fk_id_type_user = data.typeUser);
   }
 
-  @ApiProperty()
   ds_username: string;
-
-  @ApiProperty()
   ds_password: string;
-
-  @ApiProperty()
   ds_email: string;
-
-  @ApiProperty()
   ds_user_name: string;
-
-  @ApiProperty()
   ds_user_lastname: string;
-
-  @ApiProperty()
   nr_cpf: string;
-
-  @ApiProperty()
   fk_id_type_user: number;
 }

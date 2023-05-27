@@ -1,32 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
-import { ValidatorField } from './users.validators';
-
+import { Users } from '@prisma/client';
+import { ValidatorService } from 'src/common/validators';
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private validatorField: ValidatorService
+  ) {}
 
   async create(createUserDto: UserDto) {
-    var user = await this.prisma.users.findUnique({
-      where: {
-        nr_cpf: createUserDto.cpf
-      }
-    });
-
-    const validatorField = new ValidatorField(this.prisma);
-
-    const dictionary = new Map<string, string>();
-    dictionary
+    const dictionary = new Map<string, string>()
       .set('nr_cpf', createUserDto.cpf)
       .set('ds_email', createUserDto.email);
 
-    validatorField.IsFieldRegistered(dictionary, 'users');
+    var message = await this.validatorField.IsFieldRegistered(
+      dictionary,
+      'users'
+    );
 
-    if (user !== null) return '';
+    if (message.length > 0) return message;
 
     return this.prisma.users.create({
       data: new UserEntity(createUserDto)
@@ -36,7 +31,7 @@ export class UsersService {
   async findAll() {
     var listUser = await this.prisma.users.findMany();
 
-    const listUserDto = listUser.map(user => new UserDto(user));
+    const listUserDto = listUser.map((user: Users) => new UserDto(user));
 
     return listUserDto;
   }
@@ -49,11 +44,22 @@ export class UsersService {
     return new UserDto(user);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UserDto) {
+    const userUpdate = new UserEntity(updateUserDto);
+
+    //TODO Pensar em um validator para update de unique
+
+    return this.prisma.users.update({
+      where: { id_user: id },
+      data: userUpdate
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.prisma.users.delete({
+      where: {
+        id_user: id
+      }
+    });
   }
 }
