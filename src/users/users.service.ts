@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { Users } from '@prisma/client';
-import { ValidatorService } from 'src/common/validators';
+import { ValidatorService } from '~/common/validators';
+import { PrismaService } from '~/common/prisma';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -12,7 +13,8 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: UserDto) {
-    const dictionary = new Map<string, string>()
+    const dictionary = new Map<string, string>();
+    dictionary
       .set('nr_cpf', createUserDto.cpf)
       .set('ds_email', createUserDto.email);
 
@@ -29,7 +31,7 @@ export class UsersService {
   }
 
   async findAll() {
-    var listUser = await this.prisma.users.findMany();
+    const listUser = await this.prisma.users.findMany();
 
     const listUserDto = listUser.map((user: Users) => new UserDto(user));
 

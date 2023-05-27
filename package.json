@@ -19,15 +19,29 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
-    "commit": "cz"
+    "commit": "cz",
+    "prisma": "prisma",
+    "prisma:studio": "prisma studio",
+    "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "prisma:db:migrate": "prisma migrate dev --name",
+    "prisma:db:push": "prisma db push",
+    "prisma:db:seed": "prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
     "@prisma/client": "^4.13.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "dotenv": "^16.0.3",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^6.1.5",
+    "jest-extended": "^3.2.4",
+    "mo": "^1.7.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.6.3"
@@ -72,11 +86,25 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ],
+    "collectCoverage": true,
+    "maxConcurrency": 1,
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.ts",
+      "!**/*.d.ts",
+      "!<rootDir>/*.ts",
+      "!<rootDir>/**/index.ts",
+      "!<rootDir>/**/*.module.ts",
+      "!<rootDir>/config/**/*",
+      "!<rootDir>/common/**/*"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "~/(.*)": "<rootDir>/$1"
+    }
   },
   "config": {
     "commitizen": {

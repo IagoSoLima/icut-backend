@@ -12,10 +12,17 @@ import {
 import { UsersService } from './users.service';
 import { ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
+import { BaseController } from '~/common/controllers';
+import { AppLogger } from '~/app.logger';
 @ApiTags('Usuarios')
 @Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UsersController extends BaseController {
+  constructor(
+    private readonly usersService: UsersService,
+    readonly logger: AppLogger
+  ) {
+    super(logger, UsersController.name);
+  }
 
   @Post()
   async create(@Body() createUserDto: UserDto) {
@@ -40,7 +47,7 @@ export class UsersController {
 
       throw new HttpException('Usuario nao existe', HttpStatus.NO_CONTENT);
     } catch (err) {
-      return Error(err);
+      this.reportLoggerAndThrowException(err);
     }
   }
 

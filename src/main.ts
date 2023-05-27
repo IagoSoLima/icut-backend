@@ -1,22 +1,44 @@
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import { rateLimit } from 'express-rate-limit';
+import helmet from 'helmet';
+import { AppLogger } from '~/app.logger';
+import { AppModule } from '~/app.module';
+import { APP_PORT, APP_VERSION, APP_VERSION_PREFIX } from '~/app.vars';
+import { enableCors } from '~/cors.service';
+import { enableSwagger } from './swagger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder()
+  try {
+    const app = await NestFactory.create(AppModule, new ExpressAdapter(), {
+      logger: new AppLogger()
+    });
 
-    .setTitle('ICut - API')
+    app.enableVersioning({
+      type: VersioningType.URI,
+      prefix: APP_VERSION_PREFIX,
+      defaultVersion: APP_VERSION
+    });
 
-    .setDescription('The Median API description')
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        forbidUnknownValues: true
+      })
+    );
 
-    .setVersion('0.1')
+    enableCors(app);
+    enableSwagger(app);
 
-    .build();
+    app.use(helmet());
+    app.use(rateLimit({ windowMs: 60 * 1000, max: 1000 }));
 
-  const document = SwaggerModule.createDocument(app, config);
+    const port = (process.env.PORT ?? APP_PORT) as number;
 
-  SwaggerModule.setup('swagger', app, document);
-  await app.listen(4000);
+    await app.listen(port, () => {
+      Logger.verbose(`Icut listening at http://localhost:${port} 🙌 `, 'Main');
+    });
+  } catch (err) {}
 }
 bootstrap();
