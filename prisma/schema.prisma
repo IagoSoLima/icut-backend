@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id_user                        Int @default(autoincrement()) @id
+  ds_username                    String 
+  ds_password                    String
+  ds_email                       String
+  ds_user_name                   String
+  ds_user_lastname               String
+  nr_cpf                         String @unique
+  fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user])
+  fk_id_type_user                Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  active                         Boolean @default(true)
+  telephone                      Telephones[]
+  employee                       Employees[]
+  schedule                       Schedules[]
+}
+
+model Type_user {
+  id_type_user                   Int @default(autoincrement()) @id
+  ds_type_user                   String
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  user                           Users[]
+}
+
+model Telephones {
+  id_telephone                   Int @default(autoincrement()) @id
+  nr_telephone                   String
+  ds_telephone                   String
+  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user])
+  fk_id_user                     Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+}
+
+model Employees {
+  id_employees                   Int @default(autoincrement()) @id
+  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user])
+  fk_id_user                     Int
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
+  fk_id_establishment            Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+}
+
+model Establishments {
+  id_establishment               Int @default(autoincrement()) @id
+  ds_corporate_name              String
+  ds_representative_name         String
+  nr_cnpj                        String
+  ds_email                       String
+  establishment_logo             Bytes
+  active                         Boolean @default(true)
+  employee                       Employees[]
+  establishment_payment          Establishment_payments[]
+  service                        Services[]
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+}
+
+model Establishment_payments {
+  id_establishment_paymente      Int @default(autoincrement()) @id
+  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment])
+  fk_id_type_payment             Int
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
+  fk_id_establishment            Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+}
+
+model Type_payment {
+  id_type_payment                Int @default(autoincrement()) @id
+  ds_type_payment                String
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  establishment_payment          Establishment_payments[]
+  schedule                       Schedules[]
+}
+
+model Type_service {
+  id_type_service                Int @default(autoincrement()) @id
+  ds_type_service                String
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  service                        Services[]  
+}
+
+model Services {
+  id_service                     Int @default(autoincrement()) @id
+  ds_service                     String
+  nr_valor                       Float
+  time_duration                  DateTime
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
+  fk_id_establishment            Int
+  fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service])
+  fk_id_type_service             Int
+  schedule                       Schedules[]
+  active                         Boolean @default(true)
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+}
+
+model Schedules {
+  id_schedules                   Int @default(autoincrement()) @id
+  dt_schedule_initial            DateTime
+  dt_schedule_end                DateTime
+  fk_service                     Services @relation(fields: [fk_id_service], references: [id_service])
+  fk_id_service                  Int
+  fk_users                       Users @relation(fields: [fk_id_user], references: [id_user])
+  fk_id_user                     Int
+  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment])
+  fk_id_type_payment             Int
+  status                         Int @default(1)
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+}
