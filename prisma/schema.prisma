@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -22,6 +23,7 @@ model Users {
   fk_id_type_user                Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
   active                         Boolean @default(true)
   telephone                      Telephones[]
   employee                       Employees[]
@@ -33,6 +35,7 @@ model Type_user {
   ds_type_user                   String
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
   user                           Users[]
 }
 
@@ -44,6 +47,7 @@ model Telephones {
   fk_id_user                     Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Employees {
@@ -54,6 +58,7 @@ model Employees {
   fk_id_establishment            Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Establishments {
@@ -69,6 +74,7 @@ model Establishments {
   service                        Services[]
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Establishment_payments {
@@ -79,6 +85,7 @@ model Establishment_payments {
   fk_id_establishment            Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Type_payment {
@@ -86,6 +93,7 @@ model Type_payment {
   ds_type_payment                String
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
   establishment_payment          Establishment_payments[]
   schedule                       Schedules[]
 }
@@ -111,6 +119,7 @@ model Services {
   active                         Boolean @default(true)
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Schedules {
@@ -126,4 +135,5 @@ model Schedules {
   status                         Int @default(1)
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
