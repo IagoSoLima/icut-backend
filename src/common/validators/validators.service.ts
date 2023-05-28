@@ -9,12 +9,11 @@ export class ValidatorService {
     const message: string[] = new Array<string>();
 
     for (const [field, fieldValue] of dictionary) {
-      var entity = await this.prisma[tableName].findMany({
+      const entity = await this.prisma[tableName].findMany({
         where: {
           [field]: fieldValue
         }
       });
-      console.log(entity);
       if (entity.length > 0) {
         message.push(`O valor ${fieldValue} ja está cadastrado`);
       }
