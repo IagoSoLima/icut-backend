@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JWT_REFRESH_EXPIRES_IN, JWT_SECRET_EXPIRES_IN } from '~/app.vars';
 import { UserPayload } from '~/common/interfaces';
 import { UsersRepository } from '~/users/users.repository';
 import { SignInParams, SignInResponse } from './dto';
@@ -33,16 +34,29 @@ export class AuthService {
     return null;
   }
 
-  async signIn(user: UserPayload): Promise<SignInResponse> {
-    console.log(user);
-
+  async login(user: UserPayload): Promise<SignInResponse> {
     const payload: UserPayload = {
       ...user
     };
 
     return {
       ...payload,
-      accessToken: await this.jwtService.signAsync(payload)
+      accessToken: await this.jwtService.signAsync(payload, {
+        expiresIn: JWT_SECRET_EXPIRES_IN
+      }),
+      refreshToken: await this.jwtService.signAsync(payload, {
+        expiresIn: JWT_REFRESH_EXPIRES_IN
+      }),
+      expiresIn: JWT_SECRET_EXPIRES_IN
+    };
+  }
+
+  async refreshToken(user: UserPayload) {
+    const payload = await this.login(user as UserPayload);
+    return {
+      accessToken: payload.accessToken,
+      refreshToken: payload.refreshToken,
+      expiresIn: payload.expiresIn
     };
   }
 }

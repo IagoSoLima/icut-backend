@@ -18,7 +18,10 @@ export const IS_TEST = NODE_ENV === 'test';
 export const IS_DEV = !IS_TEST && !IS_PROD;
 
 export const JWT_SECRET = configService.get<string>('JWT_SECRET') ?? '';
-export const JWT_SECRET_EXPIRES_IN = configService.get<string>(
-  'JWT_SECRET_EXPIRES_IN'
+export const JWT_SECRET_EXPIRES_IN = Number(
+  configService.get<number>('JWT_SECRET_EXPIRES_IN')
+);
+export const JWT_REFRESH_EXPIRES_IN = Number(
+  configService.get<number>('JWT_REFRESH_EXPIRES_IN')
 );
 export const IS_PUBLIC_KEY = 'isPublic';

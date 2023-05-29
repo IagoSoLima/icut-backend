@@ -1,18 +1,41 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+
+jest.mock('class-transformer', () => {
+  return {
+    ...jest.requireActual('class-transformer'),
+    Type: typeReturn => {
+      typeReturn();
+      return jest.requireActual('class-transformer').Type(typeReturn);
+    }
+  };
+});
 
 describe('AuthController', () => {
   let controller: AuthController;
+  let service: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController]
+      controllers: [AuthController],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            login: jest.fn(),
+            refreshToken: jest.fn()
+          }
+        }
+      ]
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
+    service = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });

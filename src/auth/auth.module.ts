@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JWT_SECRET, JWT_SECRET_EXPIRES_IN } from '~/app.vars';
+import { JWT_SECRET } from '~/app.vars';
 import { PrismaService } from '~/common/prisma';
 import { UsersRepository } from '~/users/users.repository';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies';
+import { JwtStrategy, RefreshTokenStrategy } from './strategies';
 import { LocalStrategy } from './strategies/local.strategy';
 
 const dependencies = [
@@ -14,6 +14,7 @@ const dependencies = [
   UsersRepository,
   PrismaService,
   LocalStrategy,
+  RefreshTokenStrategy,
   JwtStrategy
 ];
 @Module({
@@ -21,8 +22,7 @@ const dependencies = [
     PassportModule,
     JwtModule.register({
       global: true,
-      secret: JWT_SECRET,
-      signOptions: { expiresIn: JWT_SECRET_EXPIRES_IN }
+      secret: JWT_SECRET
     })
   ],
   controllers: [AuthController],
