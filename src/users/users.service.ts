@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from './entities/user.entity';
-import { UserDto } from './dto/user.dto';
 import { Users } from '@prisma/client';
-import { ValidatorService } from '~/common/validators';
 import { PrismaService } from '~/common/prisma';
+import { ValidatorService } from '~/common/validators';
+import { UserDto } from './dto/user.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +18,7 @@ export class UsersService {
       .set('nr_cpf', createUserDto.cpf)
       .set('ds_email', createUserDto.email);
 
-    var message = await this.validatorField.IsFieldRegistered(
+    const message = await this.validatorField.IsFieldRegistered(
       dictionary,
       'users'
     );
