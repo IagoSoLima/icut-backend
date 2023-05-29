@@ -18,7 +18,6 @@ export class RefreshTokenAuthGuard extends AuthGuard('refresh-token') {
         'Bearer ' + refreshToken;
     }
 
-    console.log(context.switchToHttp().getRequest().headers['authorization']);
     return super.canActivate(context);
   }
 }

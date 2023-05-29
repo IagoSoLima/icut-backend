@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AppLogger } from '~/app.logger';
 import { JWT_REFRESH_EXPIRES_IN, JWT_SECRET_EXPIRES_IN } from '~/app.vars';
 import { UserPayload } from '~/common/interfaces';
 import { UsersRepository } from '~/users/users.repository';
-import { SignInParams, SignInResponse } from './dto';
+import { RefreshTokenResponse, SignInParams, SignInResponse } from './dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersRepository: UsersRepository,
-    private jwtService: JwtService
-  ) {}
+    private jwtService: JwtService,
+    private readonly logger: AppLogger
+  ) {
+    this.logger.setContext(AuthService.name);
+  }
 
   async validateUser(params: SignInParams): Promise<UserPayload | null> {
     const { email, password } = params;
@@ -51,7 +55,7 @@ export class AuthService {
     };
   }
 
-  async refreshToken(user: UserPayload) {
+  async refreshToken(user: UserPayload): Promise<RefreshTokenResponse> {
     const payload = await this.login(user as UserPayload);
     return {
       accessToken: payload.accessToken,

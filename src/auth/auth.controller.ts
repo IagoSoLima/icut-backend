@@ -58,7 +58,8 @@ export class AuthController {
   @Post('/refresh')
   async refresh(@GetUser() user: UserPayload) {
     try {
-      return this.authService.refreshToken(user);
+      const response = await this.authService.refreshToken(user);
+      return AuthRefreshResponseDTO.factory(response);
     } catch (error) {
       throw new BadRequestException(error);
     }

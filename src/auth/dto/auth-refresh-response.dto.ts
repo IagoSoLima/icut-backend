@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { snakeKeys } from '~/common/utils';
-import { SignInResponse } from './sign-in-response.dto';
+import { RefreshTokenResponse } from './refresh-token-response.dto';
 
 export class AuthRefreshResponseDTO {
   @ApiProperty({
@@ -31,7 +31,7 @@ export class AuthRefreshResponseDTO {
   @Type(() => Number)
   expiresIn: number;
 
-  static factory(data: SignInResponse) {
+  static factory(data: RefreshTokenResponse) {
     const formatedData = {
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
