@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Users } from '@prisma/client';
+import { UserEntity } from '../entities/user.entity';
 
 export class UserDto {
-  constructor(data: Users) {
-    this.id = data.id_user;
-    (this.firstName = data.ds_user_name),
+  constructor(data: UserEntity) {
+    (this.id = data.id_user),
+      (this.firstName = data.ds_user_name),
       (this.lastName = data.ds_user_lastname),
       (this.email = data.ds_email),
       (this.username = data.ds_username),

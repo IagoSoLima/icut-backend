@@ -25,7 +25,8 @@ export class UsersController extends BaseController {
   }
 
   @Post()
-  async create(@Body() createUserDto: UserDto) {
+  async create(@Body() createUserDto: any) {
+    console.log(createUserDto);
     var response = await this.usersService.create(createUserDto);
 
     if (Array.isArray(response)) {

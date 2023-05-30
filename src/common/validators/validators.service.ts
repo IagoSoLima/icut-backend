@@ -14,7 +14,6 @@ export class ValidatorService {
           [field]: fieldValue
         }
       });
-      console.log(entity);
       if (entity.length > 0) {
         message.push(`O valor ${fieldValue} ja está cadastrado`);
       }

@@ -4,13 +4,17 @@ import { UserDto } from './dto/user.dto';
 import { Users } from '@prisma/client';
 import { ValidatorService } from '~/common/validators';
 import { PrismaService } from '~/common/prisma';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     private prisma: PrismaService,
-    private validatorField: ValidatorService
-  ) {}
+    private validatorField: ValidatorService,
+    private userRepository: UsersRepository
+  ) {
+    this.userRepository._tableName = 'users';
+  }
 
   async create(createUserDto: UserDto) {
     const dictionary = new Map<string, string>();
@@ -25,13 +29,11 @@ export class UsersService {
 
     if (message.length > 0) return message;
 
-    return this.prisma.users.create({
-      data: new UserEntity(createUserDto)
-    });
+    this.userRepository.create(new UserEntity(createUserDto));
   }
 
   async findAll() {
-    const listUser = await this.prisma.users.findMany();
+    const listUser = await this.userRepository.findAll();
 
     const listUserDto = listUser.map((user: Users) => new UserDto(user));
 
