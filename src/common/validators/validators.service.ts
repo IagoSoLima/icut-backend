@@ -9,7 +9,7 @@ export class ValidatorService {
     const message: string[] = new Array<string>();
 
     for (const [field, fieldValue] of dictionary) {
-      var entity = await this.prisma[tableName].findMany({
+      const entity = await this.prisma[tableName].findMany({
         where: {
           [field]: fieldValue
         }

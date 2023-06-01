@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpException,
-  HttpStatus
+  HttpStatus,
+  Param,
+  Patch,
+  Post
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
-import { UserDto } from './dto/user.dto';
-import { BaseController } from '~/common/controllers';
+import { ApiTags } from '@nestjs/swagger';
 import { AppLogger } from '~/app.logger';
+import { BaseController } from '~/common/controllers';
+import { UserDto } from './dto/user.dto';
+import { UsersService } from './users.service';
 @ApiTags('Usuarios')
 @Controller('users')
 export class UsersController extends BaseController {
@@ -25,9 +25,8 @@ export class UsersController extends BaseController {
   }
 
   @Post()
-  async create(@Body() createUserDto: any) {
-    console.log(createUserDto);
-    var response = await this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: UserDto) {
+    const response = await this.usersService.create(createUserDto);
 
     if (Array.isArray(response)) {
       throw new HttpException(response, HttpStatus.PRECONDITION_FAILED);
