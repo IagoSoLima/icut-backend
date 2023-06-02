@@ -28,10 +28,10 @@ import {
 
 @ApiTags('Auth')
 @Controller('auth')
+@Public()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
   @UseGuards(LocalAuthGuard)
   @ApiCreatedResponse({ type: AuthResponseDTO })
   @ApiBody({ type: AuthRequestDTO })
@@ -48,7 +48,6 @@ export class AuthController {
     }
   }
 
-  @Public()
   @UseGuards(RefreshTokenAuthGuard)
   @ApiCreatedResponse({ type: AuthRefreshResponseDTO })
   @ApiBody({ type: AuthRefreshRequestDTO })
