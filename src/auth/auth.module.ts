@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy, RefreshTokenStrategy } from './strategies';
 import { LocalStrategy } from './strategies/local.strategy';
+import { PrismaService } from '~/common/prisma';
 
 const dependencies = [
   AppLogger,
@@ -16,7 +17,8 @@ const dependencies = [
   UsersRepository,
   LocalStrategy,
   RefreshTokenStrategy,
-  JwtStrategy
+  JwtStrategy,
+  PrismaService
 ];
 @Module({
   imports: [

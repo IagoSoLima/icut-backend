@@ -12,9 +12,7 @@ export class UsersService {
     private prisma: PrismaService,
     private validatorField: ValidatorService,
     private userRepository: UsersRepository
-  ) {
-    this.userRepository._tableName = 'users';
-  }
+  ) {}
 
   async create(createUserDto: UserDto) {
     const dictionary = new Map<string, string>();

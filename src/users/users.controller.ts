@@ -14,6 +14,7 @@ import { AppLogger } from '~/app.logger';
 import { BaseController } from '~/common/controllers';
 import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
+import { Public } from '~/common/decorators';
 @ApiTags('Usuarios')
 @Controller('users')
 export class UsersController extends BaseController {
@@ -25,7 +26,8 @@ export class UsersController extends BaseController {
   }
 
   @Post()
-  async create(@Body() createUserDto: UserDto) {
+  @Public()
+  async create(@Body() createUserDto: any) {
     const response = await this.usersService.create(createUserDto);
 
     if (Array.isArray(response)) {
@@ -34,6 +36,7 @@ export class UsersController extends BaseController {
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.usersService.findAll();
   }
