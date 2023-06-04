@@ -1,10 +1,32 @@
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshTokenStrategy } from '~/auth/strategies';
 
 describe('RefreshTokenStrategy', () => {
-  it('should return user-payload data', async () => {
-    const jwt = new RefreshTokenStrategy();
+  let refreshTokenStrategy: RefreshTokenStrategy;
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        {
+          provide: JwtService,
+          useValue: {
+            signAsync: jest.fn()
+          }
+        },
+        RefreshTokenStrategy
+      ]
+    }).compile();
 
-    const response = await jwt.validate({
+    refreshTokenStrategy =
+      module.get<RefreshTokenStrategy>(RefreshTokenStrategy);
+  });
+
+  it('should be defined', () => {
+    expect(refreshTokenStrategy).toBeDefined();
+  });
+
+  it('should return user-payload data', async () => {
+    const response = await refreshTokenStrategy.validate({
       id: 'XXXXXXXXXXXXX',
       email: 'email@email',
       lastName: 'da Silva',
