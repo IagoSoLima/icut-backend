@@ -11,6 +11,7 @@ services:
       dockerfile: Dockerfile.prod
     container_name: ${APP_CONTAINER_NAME}_prod
     command: npm run start:prod
+    pull_policy: always
     tty: true
     ports:
       - ${APP_PORT}:${APP_PORT}
