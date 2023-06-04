@@ -6,15 +6,7 @@ describe('RefreshTokenStrategy', () => {
   let refreshTokenStrategy: RefreshTokenStrategy;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        {
-          provide: JwtService,
-          useValue: {
-            signAsync: jest.fn()
-          }
-        },
-        RefreshTokenStrategy
-      ]
+      providers: [JwtService, RefreshTokenStrategy]
     }).compile();
 
     refreshTokenStrategy =
