@@ -20,4 +20,8 @@ jobs:
         with:
           node-version: 18.14.2
       - run: npm install
-      - run: npm run test:cov
+
+      - name: Run tests with coverage
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm run test:cov

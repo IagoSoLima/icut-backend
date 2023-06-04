@@ -1,0 +1,40 @@
+name: CD-backend
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: sa-east-1
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.14.2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Deploy application
+        run: |
+          export INSTANCE_IP="54.207.235.172" 
+          export INSTANCE_USER="ubuntu"  
+
+          # Conectar à instância EC2 e executar o deploy
+          ssh -i "$HOME/.ssh/id_rsa" "$INSTANCE_USER@$INSTANCE_IP"  "cd ~/app && sudo docker compose -f docker-compose.prod.yml up -d"
