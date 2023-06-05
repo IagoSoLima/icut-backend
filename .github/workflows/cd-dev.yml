@@ -36,14 +36,14 @@ jobs:
 
       - name: Deploy application
         run: |
-          export PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}"
+          export PRIVATE_KEY="${{ secrets.AWS_EC2_SSH_DEV  }}"
           export INSTANCE_HOST="ec2-54-207-235-172.sa-east-1.compute.amazonaws.com"
 
           # Configurar a chave privada para autenticação SSH
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "$INSTANCE_IP" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$INSTANCE_HOST" >> ~/.ssh/known_hosts
 
           # Conectar à instância EC2 e executar o comando de reinicialização do Docker Compose
-          ssh -i "${{ secrets.AWS_EC2_SSH_DEV }}"  ubuntu@$INSTANCE_IP  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
+          ssh -i ~/.ssh/id_rsa  ubuntu@$INSTANCE_IP  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
