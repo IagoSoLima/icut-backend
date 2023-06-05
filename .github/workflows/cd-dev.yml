@@ -37,7 +37,7 @@ jobs:
       - name: Deploy application
         run: |
           export PRIVATE_KEY="${{ secrets.AWS_EC2_SSH_DEV  }}"
-          export INSTANCE_HOST="ec2-54-207-235-172.sa-east-1.compute.amazonaws.com"
+          export INSTANCE_HOST="54.207.235.172"
 
           # Configurar a chave privada para autenticação SSH
           mkdir -p ~/.ssh
