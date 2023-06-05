@@ -1,4 +1,4 @@
-name: CD-backend
+name: cd-api-dev
 
 on:
   push:
@@ -32,9 +32,4 @@ jobs:
         run: npm run test
 
       - name: Deploy application
-        run: |
-          export INSTANCE_IP="54.207.235.172" 
-          export INSTANCE_USER="ubuntu"
-
-          # Conectar à instância EC2 e executar o deploy
-          ssh -i ${{ secrets.AWS_EC2_SSH_DEV }} "$INSTANCE_USER@$INSTANCE_IP"  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
+        run: ssh -i ${{ secrets.AWS_EC2_SSH_DEV }}  ubuntu@ec2-54-207-235-172.sa-east-1.compute.amazonaws.com  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
