@@ -31,5 +31,19 @@ jobs:
       - name: Test application
         run: npm run test
 
+      - name: Install SSH client
+        run: sudo apt-get install -y openssh-client
+
       - name: Deploy application
-        run: ssh -i "${{ secrets.AWS_EC2_SSH_DEV }}"  ubuntu@ec2-54-207-235-172.sa-east-1.compute.amazonaws.com  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
+        run: |
+          export PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}"
+          export INSTANCE_HOST="ec2-54-207-235-172.sa-east-1.compute.amazonaws.com"
+
+          # Configurar a chave privada para autenticação SSH
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$INSTANCE_IP" >> ~/.ssh/known_hosts
+
+          # Conectar à instância EC2 e executar o comando de reinicialização do Docker Compose
+          ssh -i "${{ secrets.AWS_EC2_SSH_DEV }}"  ubuntu@$INSTANCE_IP  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
