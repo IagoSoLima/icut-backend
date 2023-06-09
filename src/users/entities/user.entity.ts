@@ -12,6 +12,7 @@ export class UserEntity {
       (this.fk_id_type_user = data.typeUser);
   }
 
+  id_user: number;
   ds_username: string;
   ds_password: string;
   ds_email: string;

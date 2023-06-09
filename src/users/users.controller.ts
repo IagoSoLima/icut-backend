@@ -14,7 +14,11 @@ import { AppLogger } from '~/app.logger';
 import { BaseController } from '~/common/controllers';
 import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
+import { Public } from '~/common/decorators';
+import { CreateUserDto } from './dto/create.user.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
 @ApiTags('Usuarios')
+@Public()
 @Controller('users')
 export class UsersController extends BaseController {
   constructor(
@@ -25,7 +29,7 @@ export class UsersController extends BaseController {
   }
 
   @Post()
-  async create(@Body() createUserDto: UserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     const response = await this.usersService.create(createUserDto);
 
     if (Array.isArray(response)) {
@@ -52,7 +56,7 @@ export class UsersController extends BaseController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
