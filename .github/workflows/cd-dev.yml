@@ -46,4 +46,4 @@ jobs:
           ssh-keyscan -H "$INSTANCE_HOST" >> ~/.ssh/known_hosts
 
           # Conectar à instância EC2 e executar o comando de reinicialização do Docker Compose
-          ssh -i ~/.ssh/id_rsa  ubuntu@$INSTANCE_HOST  "cd ~/app && sudo docker compose -f docker-compose.prod.yml restart"
+          ssh -i ~/.ssh/id_rsa  ubuntu@$INSTANCE_HOST  "cd ~/app && git pull && sudo docker compose -f docker-compose.prod.yml restart"
