@@ -34,7 +34,7 @@ describe('UsersRepository', () => {
     const findUniqueSpy = jest
       .spyOn(prismaService.users, 'findUnique')
       .mockReturnValueOnce({} as any);
-    const response = await usersRepository.get({
+    const response = await usersRepository.findOne({
       id_user: 1
     });
     expect(findUniqueSpy).toHaveBeenCalled();

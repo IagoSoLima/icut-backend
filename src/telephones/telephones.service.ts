@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTelephoneDto } from './dto/create-telephone.dto';
 import { UpdateTelephoneDto } from './dto/update-telephone.dto';
+import { TelephoneRepository } from './telephone.repository';
+import { TelephoneDto } from './dto/telephone.dto';
 
 @Injectable()
-export class TelephonesService {
-  create(createTelephoneDto: CreateTelephoneDto) {
-    return 'This action adds a new telephone';
+export class TelephoneService {
+  constructor(private telephoneRepository: TelephoneRepository) {}
+
+  async create(createTelephoneDto: CreateTelephoneDto) {
+    await this.telephoneRepository.create({
+      ds_telephone: createTelephoneDto.telephoneDescription,
+      nr_telephone: createTelephoneDto.telephoneNumber.replace(
+        /[\s()-]*/gim,
+        ''
+      ),
+      fk_id_user: createTelephoneDto.userId
+    });
   }
 
-  findAll() {
-    return `This action returns all telephones`;
+  async findAllByUserId(id: number) {
+    var listTelephones = await this.telephoneRepository.getByUserId(id);
+    var listTelephoneDto = listTelephones.map(telephone =>
+      TelephoneDto.factory(telephone)
+    );
+    return listTelephoneDto;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} telephone`;
+  async update(id: number, updateTelephoneDto: UpdateTelephoneDto) {
+    await this.telephoneRepository.update({
+      where: {
+        id_telephone: id
+      },
+      data: {
+        ds_telephone: updateTelephoneDto.telephoneDescription,
+        nr_telephone: updateTelephoneDto.telephoneNumber.replace(
+          /[\s()-]*/gim,
+          ''
+        )
+      }
+    });
   }
 
-  update(id: number, updateTelephoneDto: UpdateTelephoneDto) {
-    return `This action updates a #${id} telephone`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} telephone`;
+  async deleteByTelephoneId(id: number) {
+    return await this.telephoneRepository.deleteByTelephoneId({
+      where: {
+        id_telephone: id
+      }
+    });
   }
 }

@@ -7,27 +7,24 @@ import {
   Param,
   Delete
 } from '@nestjs/common';
-import { TelephonesService } from './telephones.service';
+import { TelephoneService } from './telephones.service';
 import { CreateTelephoneDto } from './dto/create-telephone.dto';
 import { UpdateTelephoneDto } from './dto/update-telephone.dto';
+import { Public } from '~/common/decorators';
 
 @Controller('telephones')
+@Public()
 export class TelephonesController {
-  constructor(private readonly telephonesService: TelephonesService) {}
+  constructor(private readonly telephonesService: TelephoneService) {}
 
   @Post()
   create(@Body() createTelephoneDto: CreateTelephoneDto) {
     return this.telephonesService.create(createTelephoneDto);
   }
 
-  @Get()
-  findAll() {
-    return this.telephonesService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.telephonesService.findOne(+id);
+  findAllByUserId(@Param('id') id: string) {
+    return this.telephonesService.findAllByUserId(+id);
   }
 
   @Patch(':id')
@@ -40,6 +37,6 @@ export class TelephonesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.telephonesService.remove(+id);
+    return this.telephonesService.deleteByTelephoneId(+id);
   }
 }
