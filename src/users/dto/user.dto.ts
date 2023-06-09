@@ -1,18 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Users } from '@prisma/client';
+import { Telephones, Users } from '@prisma/client';
+import { snakeKeys } from '~/common/utils';
+import { UserTelephoneDto } from './user.telephone.dto';
 
 export class UserDto {
-  constructor(data: Users) {
-    this.id = data.id_user;
-    (this.firstName = data.ds_user_name),
-      (this.lastName = data.ds_user_lastname),
-      (this.email = data.ds_email),
-      (this.username = data.ds_username),
-      (this.password = data.ds_password),
-      (this.typeUser = data.fk_id_type_user),
-      (this.cpf = data.nr_cpf);
-  }
-
   @ApiProperty()
   id?: number;
 
@@ -36,4 +27,25 @@ export class UserDto {
 
   @ApiProperty()
   typeUser?: number;
+
+  @ApiProperty()
+  listTelephones?: Array<UserTelephoneDto>;
+
+  static factory(data: Users & { telephone: Telephones[] }) {
+    const formatedData = {
+      id: data.id_user,
+      username: data.ds_username,
+      password: data.ds_password,
+      email: data.ds_email,
+      firstName: data.ds_user_name,
+      lastName: data.ds_user_lastname,
+      cpf: data.nr_cpf,
+      typeUser: data.fk_id_type_user,
+      listTelephones: data.telephone.map(telefone => {
+        return UserTelephoneDto.factory(telefone);
+      })
+    };
+
+    return snakeKeys(formatedData);
+  }
 }

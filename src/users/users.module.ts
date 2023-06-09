@@ -5,7 +5,8 @@ import { ValidatorService } from '~/common/validators';
 import { UsersController } from './users.controller';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
-
+import { TelephoneService } from '~/telephones/telephones.service';
+import { TelephoneRepository } from '~/telephones/telephone.repository';
 const dependencies = [
   UsersService,
   UsersRepository,
@@ -16,7 +17,14 @@ const dependencies = [
 
 @Module({
   controllers: [UsersController],
-  providers: dependencies,
-  exports: dependencies
+  providers: [
+    UsersService,
+    ValidatorService,
+    PrismaService,
+    UsersRepository,
+    TelephoneService,
+    TelephoneRepository,
+    AppLogger
+  ]
 })
 export class UsersModule {}
