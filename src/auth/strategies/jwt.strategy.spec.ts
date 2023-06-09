@@ -1,10 +1,23 @@
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { JwtStrategy } from '~/auth/strategies/jwt.strategy';
 
 describe('JwtStrategy', () => {
-  it('should return user-payload data', () => {
-    const jwt = new JwtStrategy();
+  let jwtStrategy: JwtStrategy;
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [JwtService, JwtStrategy]
+    }).compile();
 
-    const response = jwt.validate({
+    jwtStrategy = module.get<JwtStrategy>(JwtStrategy);
+  });
+
+  it('should be defined', () => {
+    expect(jwtStrategy).toBeDefined();
+  });
+
+  it('should return user-payload data', () => {
+    const response = jwtStrategy.validate({
       id: 'XXXXXXXXXXXXX',
       email: 'email@email',
       lastName: 'da Silva',

@@ -19,7 +19,7 @@ model Users {
   ds_user_name                   String
   ds_user_lastname               String
   nr_cpf                         String @unique
-  fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user])
+  fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: NoAction)
   fk_id_type_user                Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
