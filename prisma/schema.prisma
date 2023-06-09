@@ -19,14 +19,14 @@ model Users {
   ds_user_name                   String
   ds_user_lastname               String
   nr_cpf                         String @unique
-  fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: NoAction)
-  fk_id_type_user                Int
+  fk_id_type_user                Int? @default(1)
+  fk_type_user                   Type_user? @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: SetNull, onUpdate: Cascade) 
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
   active                         Boolean @default(true)
+  employee                       Employees? 
   telephone                      Telephones[]
-  employee                       Employees[]
   schedule                       Schedules[]
 }
 
@@ -43,7 +43,7 @@ model Telephones {
   id_telephone                   Int @default(autoincrement()) @id
   nr_telephone                   String
   ds_telephone                   String
-  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user])
+  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user], onDelete:Cascade, onUpdate: Cascade )
   fk_id_user                     Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
@@ -52,9 +52,9 @@ model Telephones {
 
 model Employees {
   id_employees                   Int @default(autoincrement()) @id
-  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user])
-  fk_id_user                     Int
-  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
+  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user], onDelete: Cascade, onUpdate: Cascade)
+  fk_id_user                     Int @unique
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete:Cascade, onUpdate: Cascade)
   fk_id_establishment            Int
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
@@ -67,7 +67,7 @@ model Establishments {
   ds_representative_name         String
   nr_cnpj                        String
   ds_email                       String
-  establishment_logo             Bytes
+  establishment_logo             String
   active                         Boolean @default(true)
   employee                       Employees[]
   establishment_payment          Establishment_payments[]
@@ -79,7 +79,7 @@ model Establishments {
 
 model Establishment_payments {
   id_establishment_paymente      Int @default(autoincrement()) @id
-  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment])
+  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: Cascade, onUpdate: Cascade)
   fk_id_type_payment             Int
   fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
   fk_id_establishment            Int
@@ -111,9 +111,9 @@ model Services {
   ds_service                     String
   nr_valor                       Float
   time_duration                  DateTime
-  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: Cascade, onUpdate: Cascade)
   fk_id_establishment            Int
-  fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service])
+  fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service], onDelete: Cascade, onUpdate: Cascade)
   fk_id_type_service             Int
   schedule                       Schedules[]
   active                         Boolean @default(true)
@@ -126,12 +126,12 @@ model Schedules {
   id_schedules                   Int @default(autoincrement()) @id
   dt_schedule_initial            DateTime
   dt_schedule_end                DateTime
-  fk_service                     Services @relation(fields: [fk_id_service], references: [id_service])
-  fk_id_service                  Int
-  fk_users                       Users @relation(fields: [fk_id_user], references: [id_user])
-  fk_id_user                     Int
-  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment])
-  fk_id_type_payment             Int
+  fk_service                     Services? @relation(fields: [fk_id_service], references: [id_service], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_service                  Int?
+  fk_users                       Users? @relation(fields: [fk_id_user], references: [id_user], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_user                     Int?
+  fk_type_payment                Type_payment? @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_type_payment             Int?
   status                         Int @default(1)
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())

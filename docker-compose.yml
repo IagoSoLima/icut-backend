@@ -33,18 +33,3 @@ services:
       - app-network
     volumes:
       - ./.docker/pgdata:/var/lib/postgresql
-
-  pgadmin:
-    container_name: ${PGADMIN_CONTAINER_NAME}
-    image: dpage/pgadmin4:5.5
-    restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-      - PGADMIN_LISTEN_PORT=${PGADMIN_LISTEN_PORT}
-    ports:
-      - ${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}
-    volumes:
-      - ./.docker/pgadmin:/var/lib/pgadmin
-    networks:
-      - app-network
