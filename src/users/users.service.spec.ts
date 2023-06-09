@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
+import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -16,6 +17,11 @@ describe('UsersService', () => {
           useValue: {
             IsFieldRegistered: jest.fn()
           }
+        },
+
+        {
+          provide: UsersRepository,
+          useValue: jest.fn()
         },
 
         {

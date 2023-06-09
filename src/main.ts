@@ -39,6 +39,8 @@ async function bootstrap() {
     await app.listen(port, () => {
       Logger.verbose(`Icut listening at http://localhost:${port} 🙌 `, 'Main');
     });
-  } catch (err) {}
+  } catch (err) {
+    Logger.error(err);
+  }
 }
 bootstrap();
