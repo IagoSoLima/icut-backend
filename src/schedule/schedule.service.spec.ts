@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppLogger } from '~/app.logger';
+import { PrismaService } from '~/common/prisma';
 import { ScheduleRepository } from '~/schedule/schedule.repository';
+import { ServicesRepository } from '~/services/services.repository';
 import { ScheduleService } from './schedule.service';
 
 describe('ScheduleService', () => {
@@ -11,6 +13,9 @@ describe('ScheduleService', () => {
       providers: [
         ScheduleService,
         AppLogger,
+        ScheduleRepository,
+        ServicesRepository,
+        PrismaService,
         {
           provide: ScheduleRepository,
           useValue: {

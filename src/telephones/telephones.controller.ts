@@ -8,6 +8,8 @@ import {
   Post
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AppLogger } from '~/app.logger';
+import { BaseController } from '~/common/controllers';
 import { CreateTelephoneDto } from './dto/create-telephone.dto';
 import { UpdateTelephoneDto } from './dto/update-telephone.dto';
 import { TelephoneService } from './telephones.service';
@@ -15,8 +17,13 @@ import { TelephoneService } from './telephones.service';
 @ApiTags('Telephones')
 @ApiBearerAuth()
 @Controller('telephones')
-export class TelephonesController {
-  constructor(private readonly telephonesService: TelephoneService) {}
+export class TelephonesController extends BaseController {
+  constructor(
+    private readonly telephonesService: TelephoneService,
+    readonly logger: AppLogger
+  ) {
+    super(logger, TelephonesController.name);
+  }
 
   @Post()
   create(@Body() createTelephoneDto: CreateTelephoneDto) {

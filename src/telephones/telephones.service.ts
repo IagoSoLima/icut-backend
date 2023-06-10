@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTelephoneDto } from './dto/create-telephone.dto';
+import { TelephoneDto } from './dto/telephone.dto';
 import { UpdateTelephoneDto } from './dto/update-telephone.dto';
 import { TelephoneRepository } from './telephone.repository';
-import { TelephoneDto } from './dto/telephone.dto';
 
 @Injectable()
 export class TelephoneService {
