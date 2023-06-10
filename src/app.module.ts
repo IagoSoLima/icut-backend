@@ -5,9 +5,17 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
 import { TelephonesModule } from './telephones/telephones.module';
 import { UsersModule } from './users/users.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, TelephonesModule, RootModule],
+  imports: [
+    AuthModule,
+    UsersModule,
+    TelephonesModule,
+    RootModule,
+    ScheduleModule
+  ],
   providers: [
     {
       provide: APP_GUARD,

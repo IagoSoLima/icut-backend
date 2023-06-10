@@ -19,8 +19,8 @@ model Users {
   ds_user_name                   String
   ds_user_lastname               String
   nr_cpf                         String @unique
-  fk_id_type_user                Int? @default(1)
-  fk_type_user                   Type_user? @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: SetNull, onUpdate: Cascade) 
+  fk_id_type_user                Int @default(1)
+  fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: NoAction, onUpdate: Cascade) 
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
@@ -79,7 +79,7 @@ model Establishments {
 
 model Establishment_payments {
   id_establishment_paymente      Int @default(autoincrement()) @id
-  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: Cascade, onUpdate: Cascade)
+  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: NoAction, onUpdate: Cascade)
   fk_id_type_payment             Int
   fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
   fk_id_establishment            Int
@@ -111,9 +111,9 @@ model Services {
   ds_service                     String
   nr_valor                       Float
   time_duration                  DateTime
-  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: Cascade, onUpdate: Cascade)
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: NoAction, onUpdate: Cascade)
   fk_id_establishment            Int
-  fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service], onDelete: Cascade, onUpdate: Cascade)
+  fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service], onDelete: NoAction, onUpdate: Cascade)
   fk_id_type_service             Int
   schedule                       Schedules[]
   active                         Boolean @default(true)
