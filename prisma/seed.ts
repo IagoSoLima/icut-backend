@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { set } from 'date-fns';
 import { IS_DEV } from '../src/app.vars';
 
 const prisma = new PrismaClient();
@@ -96,7 +95,7 @@ const createServices = async (establishmentId: number) => {
       {
         fk_id_type_service: 1,
         ds_service: 'Corte de cabelo com tesoura e máquina',
-        time_duration: set(new Date(), { hours: 0, minutes: 30, seconds: 0 }),
+        time_duration: '00:30:00',
         nr_valor: 50,
         fk_id_establishment: establishmentId,
         active: true
@@ -104,7 +103,7 @@ const createServices = async (establishmentId: number) => {
       {
         fk_id_type_service: 2,
         ds_service: 'Corte e/ou manutenção da barba com hidratação',
-        time_duration: set(new Date(), { hours: 0, minutes: 45, seconds: 0 }),
+        time_duration: '01:30:00',
         nr_valor: 30,
         fk_id_establishment: establishmentId,
         active: true
@@ -112,7 +111,7 @@ const createServices = async (establishmentId: number) => {
       {
         fk_id_type_service: 2,
         ds_service: 'Corte e/ou manutenção da barba sem hidratação',
-        time_duration: set(new Date(), { hours: 0, minutes: 30, seconds: 0 }),
+        time_duration: '00:30:00',
         nr_valor: 20,
         fk_id_establishment: establishmentId,
         active: true

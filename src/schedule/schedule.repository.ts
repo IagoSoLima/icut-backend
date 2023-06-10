@@ -24,4 +24,30 @@ export class ScheduleRepository {
       where: surveyWhereUniqueInput
     });
   }
+
+  async findFirst(params: {
+    where?: Prisma.SchedulesWhereInput;
+    include?: Prisma.SchedulesInclude;
+  }): Promise<Schedules | null> {
+    const { where, include } = params;
+    return this.prismaService.schedules.findFirst({
+      where,
+      include
+    });
+  }
+
+  async create(data: Prisma.SchedulesUncheckedCreateInput): Promise<Schedules> {
+    return this.prismaService.schedules.create({ data });
+  }
+
+  async update(params: {
+    where: Prisma.SchedulesWhereUniqueInput;
+    data: Prisma.SchedulesUncheckedUpdateInput;
+  }): Promise<Schedules> {
+    const { where, data } = params;
+    return this.prismaService.schedules.update({
+      where,
+      data
+    });
+  }
 }

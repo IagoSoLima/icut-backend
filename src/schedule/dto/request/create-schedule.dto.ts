@@ -9,12 +9,12 @@ export class CreateScheduleRequestDTO {
     required: true,
     type: Number
   })
-  @Expose({ name: 'service' })
+  @Expose({ name: 'service_id' })
   @Type(() => Number)
   @IsNotEmpty({
     message: 'Por favor fornece o o serviço'
   })
-  service: number;
+  serviceId: number;
 
   @ApiProperty({
     name: 'Data e horário inicial do agendamento',
@@ -30,8 +30,8 @@ export class CreateScheduleRequestDTO {
   dateStart: Date;
 
   @ApiProperty({
-    name: 'Data e horário final do agendamento',
-    example: '2022-08-20T11:00:00',
+    name: 'Meio de pagamento selecionado parao agendamento',
+    example: 1,
     required: true,
     type: Date
   })
@@ -39,5 +39,19 @@ export class CreateScheduleRequestDTO {
   @IsNotEmpty({
     message: 'Por favor fornece o método de pagamento'
   })
+  @Type(() => Number)
   paymentMethod: number;
+
+  @ApiProperty({
+    name: 'Estabelecimento que realizará o serviço',
+    example: 1,
+    required: true,
+    type: Number
+  })
+  @Expose({ name: 'establishment' })
+  @Type(() => Number)
+  @IsNotEmpty({
+    message: 'Por favor fornece o estabelecimento'
+  })
+  establishment: number;
 }

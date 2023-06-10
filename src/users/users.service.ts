@@ -28,7 +28,7 @@ export class UsersService {
       .set('ds_email', createUserDto.email)
       .set('ds_username', createUserDto.username);
 
-    var message = await this.validatorField.IsFieldRegistered(
+    let message = await this.validatorField.IsFieldRegistered(
       dictionary,
       'users'
     );

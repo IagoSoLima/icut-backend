@@ -11,24 +11,19 @@ import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
 const dependencies = [
   UsersService,
-  UsersRepository,
   ValidatorService,
   PrismaService,
+  EstablishmentsService,
+  EstablishmentsRepository,
+  UsersRepository,
+  TelephoneService,
+  TelephoneRepository,
   AppLogger
 ];
 
 @Module({
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    ValidatorService,
-    PrismaService,
-    EstablishmentsService,
-    EstablishmentsRepository,
-    UsersRepository,
-    TelephoneService,
-    TelephoneRepository,
-    AppLogger
-  ]
+  providers: dependencies,
+  exports: dependencies
 })
 export class UsersModule {}

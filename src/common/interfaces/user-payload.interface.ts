@@ -1,7 +1,7 @@
 import { UserType } from '../enum';
 
 export interface UserPayload {
-  id: string | number;
+  id: number;
   name: string;
   lastName: string;
   email: string;
