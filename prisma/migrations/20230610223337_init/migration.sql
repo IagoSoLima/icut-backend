@@ -108,7 +108,7 @@ CREATE TABLE "Services" (
     "id_service" SERIAL NOT NULL,
     "ds_service" TEXT NOT NULL,
     "nr_valor" DOUBLE PRECISION NOT NULL,
-    "time_duration" TIMESTAMP(3) NOT NULL,
+    "time_duration" TEXT NOT NULL,
     "fk_id_establishment" INTEGER NOT NULL,
     "fk_id_type_service" INTEGER NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT true,
@@ -127,6 +127,7 @@ CREATE TABLE "Schedules" (
     "fk_id_service" INTEGER,
     "fk_id_user" INTEGER,
     "fk_id_establishment_payment" INTEGER,
+    "fk_id_establishment" INTEGER,
     "status" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "update_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -182,3 +183,6 @@ ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_user_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_establishment_payment_fkey" FOREIGN KEY ("fk_id_establishment_payment") REFERENCES "Establishment_payments"("id_establishment_payment") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE SET NULL ON UPDATE CASCADE;
