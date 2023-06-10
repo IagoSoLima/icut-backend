@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from './entities/user.entity';
-import { PrismaService } from '~/common/prisma';
 import { Prisma, Telephones, Users } from '@prisma/client';
-import { CreateUserDto } from './dto/create.user.dto';
+import { PrismaService } from '~/common/prisma';
 
 @Injectable()
 export class UsersRepository {
@@ -12,11 +10,14 @@ export class UsersRepository {
     return await this.prismaService.users.create({ data });
   }
 
-  async findAll() {
+  async findAll(params: {
+    where?: Prisma.UsersWhereInput;
+    include?: Prisma.UsersInclude;
+  }): Promise<Users[] | []> {
+    const { where, include } = params;
     return await this.prismaService.users.findMany({
-      include: {
-        telephone: true
-      }
+      where,
+      include
     });
   }
 

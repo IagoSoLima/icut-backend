@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTelephoneDto } from './dto/create-telephone.dto';
+import { Prisma, Telephones } from '@prisma/client';
 import { PrismaService } from '~/common/prisma';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TelephoneRepository {
@@ -11,15 +10,15 @@ export class TelephoneRepository {
     await this.prismaService.telephones.create({ data: data });
   }
 
-  async getByTelephoneId(id: number) {
-    var listTelephone = await this.prismaService.telephones.findUnique({
+  async getByTelephoneId(id: number): Promise<Telephones | null> {
+    return await this.prismaService.telephones.findUnique({
       where: {
         id_telephone: id
       }
     });
   }
 
-  async getByUserId(id: number) {
+  async getByUserId(id: number): Promise<Telephones[] | []> {
     return await this.prismaService.telephones.findMany({
       where: {
         fk_id_user: id

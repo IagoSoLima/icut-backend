@@ -62,8 +62,9 @@ const createUserAdmin = async () => {
       nr_cnpj: '22222222222',
       active: true,
       ds_corporate_name: 'Estabeleciomento nome teste',
-      ds_email: user.ds_email,
-      ds_representative_name: user.ds_user_name,
+      ds_email: 'teste-icut-company@tuamaeaquelaursa.com',
+      ds_representative_name: 'Empresa Teste',
+      id_user_administrator: user.id_user,
       establishment_logo:
         'https://cdn.leroymerlin.com.br/products/kit_6_placas_decorativas_barbearia_barber_shop_salao_mdf_1567590343_992f_600x600.jpg',
       employee: {
