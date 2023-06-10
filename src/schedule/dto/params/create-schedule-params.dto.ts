@@ -2,7 +2,8 @@ import { UserPayload } from '~/common/interfaces';
 
 export type CreateScheduleParamsDTO = {
   user: UserPayload;
-  service: number;
+  serviceId: number;
   dateStart: Date;
   paymentMethod: number;
+  establishment: number;
 };

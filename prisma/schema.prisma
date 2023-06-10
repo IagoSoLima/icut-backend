@@ -72,17 +72,19 @@ model Establishments {
   employee                       Employees[]
   establishment_payment          Establishment_payments[]
   service                        Services[]
+  schedule                       Schedules[]
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Establishment_payments {
-  id_establishment_paymente      Int @default(autoincrement()) @id
+  id_establishment_payment       Int @default(autoincrement()) @id
   fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: NoAction, onUpdate: Cascade)
   fk_id_type_payment             Int
   fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
   fk_id_establishment            Int
+  schedule                       Schedules[]
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
@@ -95,7 +97,7 @@ model Type_payment {
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
   establishment_payment          Establishment_payments[]
-  schedule                       Schedules[]
+
 }
 
 model Type_service {
@@ -110,7 +112,7 @@ model Services {
   id_service                     Int @default(autoincrement()) @id
   ds_service                     String
   nr_valor                       Float
-  time_duration                  DateTime
+  time_duration                  String
   fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: NoAction, onUpdate: Cascade)
   fk_id_establishment            Int
   fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service], onDelete: NoAction, onUpdate: Cascade)
@@ -130,8 +132,10 @@ model Schedules {
   fk_id_service                  Int?
   fk_users                       Users? @relation(fields: [fk_id_user], references: [id_user], onDelete: SetNull, onUpdate: Cascade)
   fk_id_user                     Int?
-  fk_type_payment                Type_payment? @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: SetNull, onUpdate: Cascade)
-  fk_id_type_payment             Int?
+  fk_id_establishment_payment    Int?
+  fk_establishment_payment       Establishment_payments? @relation(fields: [fk_id_establishment_payment], references: [id_establishment_payment], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_establishment            Int?
+  fk_establishment               Establishments? @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: SetNull, onUpdate: Cascade)
   status                         Int @default(1)
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())

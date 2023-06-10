@@ -8,13 +8,15 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put
+  Put,
+  Query
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiOkResponse,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse
@@ -22,6 +24,7 @@ import {
 import { GetUser } from '~/common/decorators';
 import { BadRequestDto, UnauthorizedRequestDto } from '~/common/dtos';
 import { UserPayload } from '~/common/interfaces';
+import { ListDayAvailableServiceQueryDTO } from '~/schedule/dto/request/list-day-available-service-query.to';
 import { CreateScheduleRequestDTO, UpdateScheduleRequestDTO } from './dto';
 import { ScheduleResponseDTO } from './dto/response';
 import { ScheduleService } from './schedule.service';
@@ -46,6 +49,7 @@ export class ScheduleController {
       const response = await this.scheduleService.create({ user, ...body });
       return ScheduleResponseDTO.factory(response);
     } catch (error) {
+      console.log(error);
       throw new BadRequestException(error);
     }
   }
@@ -99,6 +103,49 @@ export class ScheduleController {
   async remove(@Param('id') id: string) {
     try {
       return this.scheduleService.remove(+id);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  @ApiQuery({ type: ListDayAvailableServiceQueryDTO })
+  @ApiOkResponse({ status: 201, description: 'Return not content' })
+  @ApiUnauthorizedResponse({ type: UnauthorizedRequestDto })
+  @ApiBadRequestResponse({ type: BadRequestDto })
+  @Get('day-available/:establishmentId')
+  async listDayAvailableService(
+    @Param('establishmentId') establishmentId: number,
+    @Query() query: ListDayAvailableServiceQueryDTO
+  ) {
+    try {
+      const { day, month, year } = query;
+      return this.scheduleService.listDayAvailableService({
+        establishmentId,
+        day,
+        month,
+        year
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  @ApiQuery({ type: ListDayAvailableServiceQueryDTO })
+  @ApiOkResponse({ status: 201, description: 'Return not content' })
+  @ApiUnauthorizedResponse({ type: UnauthorizedRequestDto })
+  @ApiBadRequestResponse({ type: BadRequestDto })
+  @Get('month-available/:establishmentId')
+  async listMonthAvailableService(
+    @Param('establishmentId') establishmentId: number,
+    @Query() query: ListDayAvailableServiceQueryDTO
+  ) {
+    try {
+      const { month, year } = query;
+      return this.scheduleService.ListProviderMonthAvailabilityService({
+        establishmentId,
+        month,
+        year
+      });
     } catch (error) {
       throw new BadRequestException(error);
     }

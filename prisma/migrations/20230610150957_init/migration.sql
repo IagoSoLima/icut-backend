@@ -7,7 +7,7 @@ CREATE TABLE "Users" (
     "ds_user_name" TEXT NOT NULL,
     "ds_user_lastname" TEXT NOT NULL,
     "nr_cpf" TEXT NOT NULL,
-    "fk_id_type_user" INTEGER DEFAULT 1,
+    "fk_id_type_user" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "update_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
@@ -70,14 +70,14 @@ CREATE TABLE "Establishments" (
 
 -- CreateTable
 CREATE TABLE "Establishment_payments" (
-    "id_establishment_paymente" SERIAL NOT NULL,
+    "id_establishment_payment" SERIAL NOT NULL,
     "fk_id_type_payment" INTEGER NOT NULL,
     "fk_id_establishment" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "update_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
 
-    CONSTRAINT "Establishment_payments_pkey" PRIMARY KEY ("id_establishment_paymente")
+    CONSTRAINT "Establishment_payments_pkey" PRIMARY KEY ("id_establishment_payment")
 );
 
 -- CreateTable
@@ -124,7 +124,7 @@ CREATE TABLE "Schedules" (
     "dt_schedule_end" TIMESTAMP(3) NOT NULL,
     "fk_id_service" INTEGER,
     "fk_id_user" INTEGER,
-    "fk_id_type_payment" INTEGER,
+    "fk_id_establishment_payment" INTEGER,
     "status" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "update_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -146,7 +146,7 @@ CREATE UNIQUE INDEX "Users_nr_cpf_key" ON "Users"("nr_cpf");
 CREATE UNIQUE INDEX "Employees_fk_id_user_key" ON "Employees"("fk_id_user");
 
 -- AddForeignKey
-ALTER TABLE "Users" ADD CONSTRAINT "Users_fk_id_type_user_fkey" FOREIGN KEY ("fk_id_type_user") REFERENCES "Type_user"("id_type_user") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Users" ADD CONSTRAINT "Users_fk_id_type_user_fkey" FOREIGN KEY ("fk_id_type_user") REFERENCES "Type_user"("id_type_user") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Telephones" ADD CONSTRAINT "Telephones_fk_id_user_fkey" FOREIGN KEY ("fk_id_user") REFERENCES "Users"("id_user") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -158,16 +158,16 @@ ALTER TABLE "Employees" ADD CONSTRAINT "Employees_fk_id_user_fkey" FOREIGN KEY (
 ALTER TABLE "Employees" ADD CONSTRAINT "Employees_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Establishment_payments" ADD CONSTRAINT "Establishment_payments_fk_id_type_payment_fkey" FOREIGN KEY ("fk_id_type_payment") REFERENCES "Type_payment"("id_type_payment") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Establishment_payments" ADD CONSTRAINT "Establishment_payments_fk_id_type_payment_fkey" FOREIGN KEY ("fk_id_type_payment") REFERENCES "Type_payment"("id_type_payment") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Establishment_payments" ADD CONSTRAINT "Establishment_payments_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Services" ADD CONSTRAINT "Services_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Services" ADD CONSTRAINT "Services_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Services" ADD CONSTRAINT "Services_fk_id_type_service_fkey" FOREIGN KEY ("fk_id_type_service") REFERENCES "Type_service"("id_type_service") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Services" ADD CONSTRAINT "Services_fk_id_type_service_fkey" FOREIGN KEY ("fk_id_type_service") REFERENCES "Type_service"("id_type_service") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_service_fkey" FOREIGN KEY ("fk_id_service") REFERENCES "Services"("id_service") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -176,4 +176,4 @@ ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_service_fkey" FOREIGN KE
 ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_user_fkey" FOREIGN KEY ("fk_id_user") REFERENCES "Users"("id_user") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_type_payment_fkey" FOREIGN KEY ("fk_id_type_payment") REFERENCES "Type_payment"("id_type_payment") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_establishment_payment_fkey" FOREIGN KEY ("fk_id_establishment_payment") REFERENCES "Establishment_payments"("id_establishment_payment") ON DELETE SET NULL ON UPDATE CASCADE;

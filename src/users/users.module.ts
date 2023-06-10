@@ -2,29 +2,24 @@ import { Module } from '@nestjs/common';
 import { AppLogger } from '~/app.logger';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
+import { TelephoneRepository } from '~/telephones/telephone.repository';
+import { TelephoneService } from '~/telephones/telephones.service';
 import { UsersController } from './users.controller';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
-import { TelephoneService } from '~/telephones/telephones.service';
-import { TelephoneRepository } from '~/telephones/telephone.repository';
 const dependencies = [
   UsersService,
-  UsersRepository,
   ValidatorService,
   PrismaService,
+  UsersRepository,
+  TelephoneService,
+  TelephoneRepository,
   AppLogger
 ];
 
 @Module({
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    ValidatorService,
-    PrismaService,
-    UsersRepository,
-    TelephoneService,
-    TelephoneRepository,
-    AppLogger
-  ]
+  providers: dependencies,
+  exports: dependencies
 })
 export class UsersModule {}

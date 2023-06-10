@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { AppLogger } from '~/app.logger';
 import { AppModule } from '~/app.module';
 import { APP_PORT, APP_VERSION, APP_VERSION_PREFIX } from '~/app.vars';
+import { DefaultExceptionsFilter } from '~/config';
 import { enableCors } from '~/cors.service';
 import { enableSwagger } from './swagger.service';
 
@@ -30,6 +31,8 @@ async function bootstrap() {
 
     enableCors(app);
     enableSwagger(app);
+
+    app.useGlobalFilters(new DefaultExceptionsFilter());
 
     app.use(helmet());
     app.use(rateLimit({ windowMs: 60 * 1000, max: 1000 }));
