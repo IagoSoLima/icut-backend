@@ -3,10 +3,14 @@ import { AppLogger } from '~/app.logger';
 import { UserType } from '~/common/enum';
 import { UnauthorizedError } from '~/common/errors';
 import { CreateScheduleParamsDTO } from './dto';
+import { ScheduleRepository } from './schedule.repository';
 
 @Injectable()
 export class ScheduleService {
-  constructor(private readonly logger: AppLogger) {
+  constructor(
+    private readonly scheduleRepository: ScheduleRepository,
+    private readonly logger: AppLogger
+  ) {
     this.logger.setContext(ScheduleService.name);
   }
 
@@ -22,11 +26,13 @@ export class ScheduleService {
   }
 
   findAll() {
-    return `This action returns all schedule`;
+    return this.scheduleRepository.findAll({});
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} schedule`;
+    return this.scheduleRepository.findOne({
+      id_schedules: id
+    });
   }
 
   update(id: number, updateScheduleDto) {

@@ -1,19 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
+  Controller,
+  Delete,
+  Get,
   Param,
-  Delete
+  Patch,
+  Post
 } from '@nestjs/common';
-import { TelephoneService } from './telephones.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateTelephoneDto } from './dto/create-telephone.dto';
 import { UpdateTelephoneDto } from './dto/update-telephone.dto';
-import { Public } from '~/common/decorators';
+import { TelephoneService } from './telephones.service';
 
+@ApiTags('Telephones')
+@ApiBearerAuth()
 @Controller('telephones')
-@Public()
 export class TelephonesController {
   constructor(private readonly telephonesService: TelephoneService) {}
 
