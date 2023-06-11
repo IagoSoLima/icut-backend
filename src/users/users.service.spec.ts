@@ -1,8 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
+import { EmployeesRepository } from '~/employees/employees.repository';
+import { EmployeesService } from '~/employees/employees.service';
 import { EstablishmentsRepository } from '~/establishments/establishments.repository';
 import { EstablishmentsService } from '~/establishments/establishments.service';
+import { TelephoneRepository } from '~/telephones/telephone.repository';
+import { TelephoneService } from '~/telephones/telephones.service';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
 
@@ -31,7 +35,11 @@ describe('UsersService', () => {
           useValue: jest.fn()
         },
         EstablishmentsService,
-        EstablishmentsRepository
+        EstablishmentsRepository,
+        TelephoneService,
+        TelephoneRepository,
+        EmployeesService,
+        EmployeesRepository
       ]
     }).compile();
 

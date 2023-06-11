@@ -30,10 +30,10 @@ export class UsersController extends BaseController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     const response = await this.usersService.create(createUserDto);
+    if (Array.isArray(response))
+      return new HttpException(response, HttpStatus.PRECONDITION_FAILED);
 
-    if (Array.isArray(response)) {
-      throw new HttpException(response, HttpStatus.PRECONDITION_FAILED);
-    }
+    return response;
   }
 
   @Get()

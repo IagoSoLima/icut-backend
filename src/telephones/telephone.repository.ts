@@ -6,8 +6,8 @@ import { PrismaService } from '~/common/prisma';
 export class TelephoneRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async create(data: Prisma.TelephonesUncheckedCreateInput) {
-    await this.prismaService.telephones.create({ data: data });
+  async create(data: Prisma.TelephonesCreateManyInput[]) {
+    await this.prismaService.telephones.createMany({ data: data });
   }
 
   async getByTelephoneId(id: number): Promise<Telephones | null> {
