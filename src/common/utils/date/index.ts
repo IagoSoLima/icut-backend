@@ -1,4 +1,5 @@
 import { format } from './format.util';
+import { getDate } from './get-date.util';
 import { getDaysInMonth } from './get-days-in-month.util';
 import { getHours } from './get-hours.util';
 import { getMinutes } from './get-minutes.util';
@@ -13,6 +14,7 @@ import { set } from './set.util';
 const DateUtil = {
   format,
   getYesterdayDate,
+  getDate,
   getHours,
   getMinutes,
   getSeconds,

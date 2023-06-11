@@ -9,7 +9,7 @@ export class ScheduleRepository {
   async findAll(params: {
     where?: Prisma.SchedulesWhereInput;
     include?: Prisma.SchedulesInclude;
-  }): Promise<Schedules[] | []> {
+  }): Promise<Schedules[]> {
     const { where, include } = params;
     return this.prismaService.schedules.findMany({
       where,

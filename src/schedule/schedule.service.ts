@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Schedules } from '@prisma/client';
 import { AppLogger } from '~/app.logger';
 import {
   DEFAULT_HOUR_START,
@@ -8,18 +9,23 @@ import {
 import { UserType } from '~/common/enum';
 import { UnexpectedError } from '~/common/errors';
 import { DateUtil } from '~/common/utils';
+import { AvailableHoursInDayResponseDTO } from '~/schedule/dto/response';
+import { AvailableHoursInDayStrategy } from '~/schedule/strategies/available-hours-in-day.stratgey';
 import { ServicesRepository } from '~/services/services.repository';
 import { CreateScheduleParamsDTO } from './dto';
 import { ScheduleRepository } from './schedule.repository';
 
 @Injectable()
 export class ScheduleService {
+  private availableHoursInDayStrategy: AvailableHoursInDayStrategy;
+
   constructor(
     private readonly scheduleRepository: ScheduleRepository,
     private readonly servicesRepository: ServicesRepository,
     private readonly logger: AppLogger
   ) {
     this.logger.setContext(ScheduleService.name);
+    this.availableHoursInDayStrategy = new AvailableHoursInDayStrategy(this);
   }
 
   async create(params: CreateScheduleParamsDTO) {
@@ -49,20 +55,6 @@ export class ScheduleService {
       throw new UnexpectedError(errorMessage);
     }
 
-    const appointment = await this.scheduleRepository.findFirst({
-      where: { dt_schedule_initial: dateStart, fk_id_service: serviceId }
-    });
-
-    if (appointment) {
-      const errorLoggerMessage = 'Appointment already exists';
-      const errorMessage = 'APPOINTMENT_ALREADY_EXISTS';
-      this.logger.fail({
-        category: 'SCHEDULE_SERVICE_ERROR',
-        error: errorLoggerMessage
-      });
-      throw new UnexpectedError(errorMessage);
-    }
-
     const dateIsPast = DateUtil.isPast(dateStart);
 
     if (dateIsPast) {
@@ -75,10 +67,6 @@ export class ScheduleService {
       throw new UnexpectedError(errorMessage);
     }
 
-    //TO DO verificar disponibilidade
-
-    // verificar se não nada no intervalo de tempo
-
     const [hour, minutes, seconds] = service.time_duration.split(':');
 
     const serviceDuration = {
@@ -88,6 +76,57 @@ export class ScheduleService {
     };
 
     const endDate = DateUtil.set(new Date(dateStart), serviceDuration);
+
+    const appointment = await this.scheduleRepository.findFirst({
+      where: {
+        dt_schedule_initial: dateStart,
+        fk_id_establishment: establishment
+      }
+    });
+
+    const firstSchedule = new Date(dateStart);
+    firstSchedule.setHours(DEFAULT_HOUR_START);
+    firstSchedule.setMinutes(0);
+
+    const lastSchedule = new Date(dateStart);
+    lastSchedule.setHours(DEFAULT_HOUR_START + DEFAULT_QUANTITY_HOURS_PER_DAY);
+    lastSchedule.setMinutes(0);
+
+    const appointments = await this.scheduleRepository.findAll({
+      where: {
+        fk_id_establishment: establishment,
+        dt_schedule_initial: {
+          gte: firstSchedule
+        },
+        dt_schedule_end: {
+          lte: lastSchedule
+        }
+      }
+    });
+
+    const hasSomeHourAvailableThisService =
+      this.availableHoursInDayStrategy.validate(
+        {
+          appointments,
+          day: dateStart.getDate(),
+          month: dateStart.getMonth() + 1,
+          year: dateStart.getFullYear(),
+          startHour: DEFAULT_HOUR_START,
+          endDate,
+          startDate: dateStart
+        },
+        []
+      );
+
+    if (appointment) {
+      const errorLoggerMessage = 'Appointment already exists';
+      const errorMessage = 'APPOINTMENT_ALREADY_EXISTS';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      throw new UnexpectedError(errorMessage);
+    }
 
     return await this.scheduleRepository.create({
       dt_schedule_initial: dateStart,
@@ -117,45 +156,20 @@ export class ScheduleService {
     return `This action removes a #${id} schedule`;
   }
 
-  async listDayAvailableService(params: {
-    establishmentId: number;
+  availableHoursInDay(params: {
+    appointments: Schedules[];
     day: number;
     month: number;
     year: number;
-  }) {
-    const { establishmentId } = params;
-    let { day, month, year } = params;
+    startHour: number;
+  }): AvailableHoursInDayResponseDTO[] {
+    const { appointments, day, month, startHour, year } = params;
 
-    if (!day) day = new Date().getDate();
-    if (!month) month = new Date().getMonth() + 1;
-    if (!year) year = new Date().getFullYear();
-
-    const firstSchedule = new Date(year, month - 1, day, DEFAULT_HOUR_START);
-    const lastSchedule = new Date(
-      year,
-      month - 1,
-      day,
-      DEFAULT_HOUR_START + DEFAULT_QUANTITY_HOURS_PER_DAY
-    );
-
-    const appointments = await this.scheduleRepository.findAll({
-      where: {
-        fk_id_establishment: establishmentId,
-        dt_schedule_initial: {
-          gte: firstSchedule
-        },
-        dt_schedule_end: {
-          lte: lastSchedule
-        }
-      }
-    });
-
-    const hourStart = DEFAULT_HOUR_START;
     const eachHourArray = Array.from(
       {
         length: DEFAULT_QUANTITY_HOURS_PER_DAY
       },
-      (_i, index) => index + hourStart
+      (_i, index) => index + startHour
     );
 
     const minuteSlots = Array.from(
@@ -204,13 +218,60 @@ export class ScheduleService {
     return availability;
   }
 
-  async ListProviderMonthAvailabilityService(params: {
+  async listDayAvailableService(params: {
+    establishmentId: number;
+    day: number;
+    month: number;
+    year: number;
+  }) {
+    const { establishmentId } = params;
+    let { day, month, year } = params;
+
+    if (!day) day = new Date().getDate();
+    if (!month) month = new Date().getMonth() + 1;
+    if (!year) year = new Date().getFullYear();
+
+    const firstSchedule = new Date(year, month - 1, day, DEFAULT_HOUR_START);
+    const lastSchedule = new Date(
+      year,
+      month - 1,
+      day,
+      DEFAULT_HOUR_START + DEFAULT_QUANTITY_HOURS_PER_DAY
+    );
+
+    const appointments = await this.scheduleRepository.findAll({
+      where: {
+        fk_id_establishment: establishmentId,
+        dt_schedule_initial: {
+          gte: firstSchedule
+        },
+        dt_schedule_end: {
+          lte: lastSchedule
+        }
+      }
+    });
+
+    const availability = this.availableHoursInDay({
+      appointments,
+      day,
+      month,
+      year,
+      startHour: DEFAULT_HOUR_START
+    });
+
+    return availability;
+  }
+
+  async listProviderMonthAvailabilityService(params: {
     establishmentId: number;
     month: number;
     year: number;
   }) {
     const { establishmentId } = params;
-    const { month, year } = params;
+    let { month, year } = params;
+
+    if (!month) month = new Date().getMonth() + 1;
+    if (!year) year = new Date().getFullYear();
 
     const numberOfSaysInMonth = DateUtil.getDaysInMonth(
       new Date(year, month - 1)
@@ -222,5 +283,65 @@ export class ScheduleService {
       },
       (_, index) => index + 1
     );
+
+    const firstDay = 1;
+    const lastDay = numberOfSaysInMonth;
+    const firstSchedule = new Date(
+      year,
+      month - 1,
+      firstDay,
+      DEFAULT_HOUR_START
+    );
+    const lastSchedule = new Date(
+      year,
+      month - 1,
+      lastDay,
+      DEFAULT_HOUR_START + DEFAULT_QUANTITY_HOURS_PER_DAY
+    );
+
+    const appointments = await this.scheduleRepository.findAll({
+      where: {
+        fk_id_establishment: establishmentId,
+        dt_schedule_initial: {
+          gte: firstSchedule
+        },
+        dt_schedule_end: {
+          lte: lastSchedule
+        }
+      }
+    });
+
+    const currentDate = new Date(Date.now());
+
+    const availability = eachDayArray.map(day => {
+      const appointmentsInDay = appointments.filter(appointment => {
+        return DateUtil.getDate(appointment.dt_schedule_initial) === day;
+      });
+
+      const compareDate = new Date(
+        year,
+        month - 1,
+        day,
+        DEFAULT_HOUR_START + DEFAULT_QUANTITY_HOURS_PER_DAY
+      );
+
+      const hoursInDay = this.availableHoursInDay({
+        appointments: appointmentsInDay,
+        day,
+        month,
+        year,
+        startHour: DEFAULT_HOUR_START
+      });
+
+      const hasSomeHourAvailable = hoursInDay.some(hour => hour.available);
+
+      return {
+        day,
+        available:
+          hasSomeHourAvailable && DateUtil.isAfter(compareDate, currentDate)
+      };
+    });
+
+    return availability;
   }
 }

@@ -24,8 +24,12 @@ import {
 import { GetUser } from '~/common/decorators';
 import { BadRequestDto, UnauthorizedRequestDto } from '~/common/dtos';
 import { UserPayload } from '~/common/interfaces';
-import { ListDayAvailableServiceQueryDTO } from '~/schedule/dto/request/list-day-available-service-query.to';
-import { CreateScheduleRequestDTO, UpdateScheduleRequestDTO } from './dto';
+import {
+  CreateScheduleRequestDTO,
+  ListDayAvailableServiceQueryDTO,
+  ListMonthAvailableServiceQueryDTO,
+  UpdateScheduleRequestDTO
+} from './dto';
 import { ScheduleResponseDTO } from './dto/response';
 import { ScheduleService } from './schedule.service';
 
@@ -130,7 +134,7 @@ export class ScheduleController {
     }
   }
 
-  @ApiQuery({ type: ListDayAvailableServiceQueryDTO })
+  @ApiQuery({ type: ListMonthAvailableServiceQueryDTO })
   @ApiOkResponse({ status: 201, description: 'Return not content' })
   @ApiUnauthorizedResponse({ type: UnauthorizedRequestDto })
   @ApiBadRequestResponse({ type: BadRequestDto })
@@ -141,7 +145,7 @@ export class ScheduleController {
   ) {
     try {
       const { month, year } = query;
-      return this.scheduleService.ListProviderMonthAvailabilityService({
+      return this.scheduleService.listProviderMonthAvailabilityService({
         establishmentId,
         month,
         year
