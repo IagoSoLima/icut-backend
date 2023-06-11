@@ -1,0 +1,23 @@
+_id: req_5a4a5ecde0294e128b18dcde3e47b6f4
+type: Request
+parentId: fld_53323a8d27684299bff37a3d557285e1
+modified: 1686359354317
+created: 1686266538274
+url: "{{ _.baseurl }}/v1/users/11"
+name: Delete
+description: ""
+method: DELETE
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{{ _.token }}"
+metaSortKey: -1686266538274
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

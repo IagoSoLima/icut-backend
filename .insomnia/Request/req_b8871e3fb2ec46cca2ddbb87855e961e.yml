@@ -1,0 +1,52 @@
+_id: req_b8871e3fb2ec46cca2ddbb87855e961e
+type: Request
+parentId: fld_53323a8d27684299bff37a3d557285e1
+modified: 1686440261444
+created: 1685061105267
+url: "{{ _.baseurl }}/v1/users"
+name: Create
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"username": "dsa2132dsdasdsadsadasdadsassaad",
+    	"password": "testesteste",
+    	"email": "email@123dsadaaadsadsasadd.com",
+    	"firstName": "Teste",
+    	"lastName": "Silva",
+    	"cpf": "709.495.850-17",
+    	"typeUser": 1,
+    	"listTelephones": [
+    		{
+    			"telephoneNumber": "11998765432",
+    			"telephoneDescription": "Meu telefone"
+    		},
+    		{
+    			"telephoneNumber": "11998765432",
+    			"telephoneDescription": "Meu telefone"
+    		}
+    	]
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_e0b7418d48cd4263bec16beb8a0a7a45
+  - id: pair_465298ff688d4deca6ac6a76dc6de90e
+    name: Authorization
+    value: Bearer 9e50a61ff446bd76cb4ace14596ab31c52aff25c
+    description: ""
+    disabled: true
+authentication:
+  type: bearer
+  token: "{{ _.token }}"
+metaSortKey: -1685061105267
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
