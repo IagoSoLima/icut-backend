@@ -3,6 +3,7 @@ import { Schedules } from '@prisma/client';
 import { AppLogger } from '~/app.logger';
 import {
   DEFAULT_HOUR_START,
+  DEFAULT_JOIN_ARRAY_ERRORS,
   DEFAULT_MINUTE_INCREMENT,
   DEFAULT_QUANTITY_HOURS_PER_DAY
 } from '~/app.vars';
@@ -18,6 +19,7 @@ import { ScheduleRepository } from './schedule.repository';
 @Injectable()
 export class ScheduleService {
   private availableHoursInDayStrategy: AvailableHoursInDayStrategy;
+  private messageError: string[];
 
   constructor(
     private readonly scheduleRepository: ScheduleRepository,
@@ -26,6 +28,7 @@ export class ScheduleService {
   ) {
     this.logger.setContext(ScheduleService.name);
     this.availableHoursInDayStrategy = new AvailableHoursInDayStrategy(this);
+    this.messageError = [];
   }
 
   async create(params: CreateScheduleParamsDTO) {
@@ -38,7 +41,9 @@ export class ScheduleService {
         category: 'SCHEDULE_SERVICE_ERROR',
         error: errorLoggerMessage
       });
-      throw new UnexpectedError(errorMessage);
+
+      this.messageError.push(errorMessage);
+      // throw new UnexpectedError(errorMessage);
     }
 
     const service = await this.servicesRepository.findOne({
@@ -52,7 +57,9 @@ export class ScheduleService {
         category: 'SCHEDULE_SERVICE_ERROR',
         error: errorLoggerMessage
       });
-      throw new UnexpectedError(errorMessage);
+      this.messageError.push(errorMessage);
+
+      // throw new UnexpectedError(errorMessage);
     }
 
     const dateIsPast = DateUtil.isPast(dateStart);
@@ -64,7 +71,10 @@ export class ScheduleService {
         category: 'SCHEDULE_SERVICE_ERROR',
         error: errorLoggerMessage
       });
-      throw new UnexpectedError(errorMessage);
+
+      this.messageError.push(errorMessage);
+
+      // throw new UnexpectedError(errorMessage);
     }
 
     const [hour, minutes, seconds] = service.time_duration.split(':');
@@ -77,12 +87,12 @@ export class ScheduleService {
 
     const endDate = DateUtil.set(new Date(dateStart), serviceDuration);
 
-    const appointment = await this.scheduleRepository.findFirst({
-      where: {
-        dt_schedule_initial: dateStart,
-        fk_id_establishment: establishment
-      }
-    });
+    // const appointment = await this.scheduleRepository.findFirst({
+    //   where: {
+    //     dt_schedule_initial: dateStart,
+    //     fk_id_establishment: establishment
+    //   }
+    // });
 
     const firstSchedule = new Date(dateStart);
     firstSchedule.setHours(DEFAULT_HOUR_START);
@@ -104,7 +114,7 @@ export class ScheduleService {
       }
     });
 
-    const hasSomeHourAvailableThisService =
+    const messageAvailableHoursInDayStrategy =
       this.availableHoursInDayStrategy.validate(
         {
           appointments,
@@ -117,15 +127,25 @@ export class ScheduleService {
         },
         []
       );
+    const hasNotAnyHourAvailableThisService =
+      messageAvailableHoursInDayStrategy.length > 0;
 
-    if (appointment) {
-      const errorLoggerMessage = 'Appointment already exists';
-      const errorMessage = 'APPOINTMENT_ALREADY_EXISTS';
+    if (hasNotAnyHourAvailableThisService) {
+      const errorLoggerMessage = 'No hour available this service';
+      const errorMessage = 'NO_HOUR_AVAILABLE_THIS_SERVICE';
       this.logger.fail({
         category: 'SCHEDULE_SERVICE_ERROR',
         error: errorLoggerMessage
       });
-      throw new UnexpectedError(errorMessage);
+      this.messageError.push(errorMessage);
+
+      // throw new UnexpectedError(errorMessage);
+    }
+
+    if (this.messageError.length > 0) {
+      throw new UnexpectedError(
+        this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS)
+      );
     }
 
     return await this.scheduleRepository.create({

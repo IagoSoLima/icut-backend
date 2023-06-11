@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Post,
@@ -21,6 +22,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
+import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
 import { GetUser } from '~/common/decorators';
 import { BadRequestDto, UnauthorizedRequestDto } from '~/common/dtos';
 import { UserPayload } from '~/common/interfaces';
@@ -53,8 +55,8 @@ export class ScheduleController {
       const response = await this.scheduleService.create({ user, ...body });
       return ScheduleResponseDTO.factory(response);
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException(error);
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.PRECONDITION_FAILED);
     }
   }
 

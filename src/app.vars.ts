@@ -30,6 +30,8 @@ export const JWT_REFRESH_EXPIRES_IN = Number(
 );
 export const IS_PUBLIC_KEY = 'isPublic';
 
+export const DEFAULT_JOIN_ARRAY_ERRORS = '$,{}]';
+
 export const DEFAULT_HOUR_START = 8;
 export const DEFAULT_QUANTITY_HOURS_PER_DAY = 10;
 export const DEFAULT_MINUTE_INCREMENT = 30;

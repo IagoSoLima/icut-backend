@@ -38,14 +38,14 @@ export class DefaultExceptionsFilter implements ExceptionFilter {
             message: exception.stack
           };
 
+    const message = body.message ?? body;
+    console.log('filter', message);
+
     response.status(status).json({
       statusCode: status,
       body: {
         status: status === 500 ? 'fail' : 'error',
-        errors:
-          typeof body.message === 'object'
-            ? this.parseMessages(body.message)
-            : body.message
+        errors: message
       }
     });
   }
