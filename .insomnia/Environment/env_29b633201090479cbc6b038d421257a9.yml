@@ -1,0 +1,20 @@
+_id: env_29b633201090479cbc6b038d421257a9
+type: Environment
+parentId: env_ffe6a7fc1ae044caa812d596a7c7f1bf
+modified: 1686361087563
+created: 1676207122049
+name: Develop
+data:
+  baseurl: http://localhost:4444
+  token: "{% response 'body', 'req_65282690e8524e9ba156bcae136952f7',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'always', 60 %}"
+  refresh_token: "{% response 'body', 'req_65282690e8524e9ba156bcae136952f7',
+    'b64::JC5yZWZyZXNoX3Rva2Vu::46b', 'always', 60 %}"
+dataPropertyOrder:
+  "&":
+    - baseurl
+    - token
+    - refresh_token
+color: "#6fcf68"
+isPrivate: false
+metaSortKey: 1676207122049

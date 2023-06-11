@@ -1,0 +1,21 @@
+_id: req_0bc146ca8cc94c34a5ee49ec0f0cd357
+type: Request
+parentId: fld_53323a8d27684299bff37a3d557285e1
+modified: 1686362244476
+created: 1676206541781
+url: "{{ _.baseurl }}/v1/users"
+name: FindAll
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1685061105217
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

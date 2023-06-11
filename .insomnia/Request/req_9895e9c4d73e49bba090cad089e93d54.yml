@@ -1,0 +1,40 @@
+_id: req_9895e9c4d73e49bba090cad089e93d54
+type: Request
+parentId: fld_53323a8d27684299bff37a3d557285e1
+modified: 1686440262411
+created: 1686276403623
+url: "{{ _.baseurl }}/v1/users/1"
+name: Update
+description: ""
+method: PATCH
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"username": "dsa2132dsdasdadsassaad",
+    	"password": "testesteste",
+    	"email": "email@123dsadaaasadd.com",
+    	"firstName": "Teste",
+    	"lastName": "silvafnsaofnsoafnao",
+    	"cpf": "880.046.780-68",
+    	"typeUser": 1
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_e0b7418d48cd4263bec16beb8a0a7a45
+  - id: pair_465298ff688d4deca6ac6a76dc6de90e
+    name: Authorization
+    value: Bearer 9e50a61ff446bd76cb4ace14596ab31c52aff25c
+    description: ""
+    disabled: true
+authentication: {}
+metaSortKey: -1685061105242
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
