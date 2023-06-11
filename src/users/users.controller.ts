@@ -9,16 +9,16 @@ import {
   Patch,
   Post
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AppLogger } from '~/app.logger';
 import { BaseController } from '~/common/controllers';
 import { Public } from '~/common/decorators';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { UsersService } from './users.service';
-@ApiTags('Usuarios')
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
-@Public()
 export class UsersController extends BaseController {
   constructor(
     private readonly usersService: UsersService,
@@ -28,6 +28,7 @@ export class UsersController extends BaseController {
   }
 
   @Post()
+  @Public()
   async create(@Body() createUserDto: CreateUserDto) {
     const response = await this.usersService.create(createUserDto);
     if (Array.isArray(response))
@@ -55,6 +56,7 @@ export class UsersController extends BaseController {
   }
 
   @Patch(':id')
+  @Public()
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
