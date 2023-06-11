@@ -10,11 +10,14 @@ export class UsersRepository {
     return await this.prismaService.users.create({ data });
   }
 
-  async findAll() {
+  async findAll(params: {
+    where?: Prisma.UsersWhereInput;
+    include?: Prisma.UsersInclude;
+  }): Promise<Users[] | []> {
+    const { where, include } = params;
     return await this.prismaService.users.findMany({
-      include: {
-        telephone: true
-      }
+      where,
+      include
     });
   }
 

@@ -1,0 +1,23 @@
+_id: req_b01a254ab48a4e6997f751065b58bc21
+type: Request
+parentId: fld_53323a8d27684299bff37a3d557285e1
+modified: 1686359406129
+created: 1684976856483
+url: "{{ _.baseurl }}/v1/users/1"
+name: FindbyId
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{{ _.token }}"
+metaSortKey: -1685061105167
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

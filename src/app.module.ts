@@ -2,6 +2,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { CacheService } from '~/config';
+import { EstablishmentsModule } from '~/establishments/establishments.module';
 import { RootModule } from '~/root/root.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
     TelephonesModule,
     RootModule,
     ScheduleModule,
+    EstablishmentsModule,
     ServicesModule
   ],
   providers: [

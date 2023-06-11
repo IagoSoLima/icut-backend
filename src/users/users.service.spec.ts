@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
+import { EstablishmentsRepository } from '~/establishments/establishments.repository';
+import { EstablishmentsService } from '~/establishments/establishments.service';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
 
@@ -27,7 +29,9 @@ describe('UsersService', () => {
         {
           provide: PrismaService,
           useValue: jest.fn()
-        }
+        },
+        EstablishmentsService,
+        EstablishmentsRepository
       ]
     }).compile();
 

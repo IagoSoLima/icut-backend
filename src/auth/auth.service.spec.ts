@@ -109,7 +109,7 @@ describe('AuthService', () => {
     it('should call jwtService.signAsync', async () => {
       const signSpy = jest.spyOn(jwtService, 'signAsync');
       await service.login({
-        id: 'XXXXXXXXXXXXX',
+        id: 1,
         email: 'XXXXXXXXXXXXX',
         active: true,
         createdAt: new Date(),
@@ -126,7 +126,7 @@ describe('AuthService', () => {
       jwtService.signAsync = jest.fn().mockResolvedValue('XXXXXXXXXXXXX');
 
       const result = await service.login({
-        id: 'XXXXXXXXXXXXX',
+        id: 1,
         email: 'XXXXXXXXXXXXX',
         active: true,
         createdAt: new Date(),
@@ -145,7 +145,7 @@ describe('AuthService', () => {
     it('should call jwtService.signAsync', async () => {
       const signSpy = jest.spyOn(jwtService, 'signAsync');
       await service.refreshToken({
-        id: 'XXXXXXXXXXXXX',
+        id: 1,
         email: 'XXXXXXXXXXXXX',
         active: true,
         createdAt: new Date(),
@@ -162,7 +162,7 @@ describe('AuthService', () => {
       jwtService.signAsync = jest.fn().mockResolvedValue('XXXXXXXXXXXXX');
 
       const token = await service.refreshToken({
-        id: 'XXXXXXXXXXXXX',
+        id: 1,
         email: 'XXXXXXXXXXXXX',
         active: true,
         createdAt: new Date(),

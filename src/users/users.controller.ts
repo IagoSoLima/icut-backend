@@ -12,11 +12,13 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { AppLogger } from '~/app.logger';
 import { BaseController } from '~/common/controllers';
+import { Public } from '~/common/decorators';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { UsersService } from './users.service';
 @ApiTags('Usuarios')
 @Controller('users')
+@Public()
 export class UsersController extends BaseController {
   constructor(
     private readonly usersService: UsersService,
