@@ -1,56 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { UserType } from '~/common/enum';
-import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
+import { EmployeesService } from '~/employees/employees.service';
 import { EstablishmentsService } from '~/establishments/establishments.service';
+import { TelephoneService } from '~/telephones/telephones.service';
 import { CreateAdmUser, CreateCommonUser } from '~/users/dto/params';
+import { CreateEmployeeUser } from '~/users/dto/params/create-employee-user';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { UserDto } from './dto/user.dto';
-import { CpfStrategy, TelephoneStrategy } from './strategies';
+import { CpfStrategy } from './strategies';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private prisma: PrismaService,
     private validatorField: ValidatorService,
     private userRepository: UsersRepository,
-    private establishmentsService: EstablishmentsService
+    private establishmentsService: EstablishmentsService,
+    private telephoneService: TelephoneService,
+    private employeeService: EmployeesService
   ) {}
   private cpfStrategy = new CpfStrategy();
-  private telephoneStrategy = new TelephoneStrategy();
 
   async create(createUserDto: CreateUserDto) {
-    const dictionary = new Map<string, string>();
-    dictionary
-      .set('nr_cpf', createUserDto.cpf.replace(/[\s.-]*/gim, ''))
-      .set('ds_email', createUserDto.email)
-      .set('ds_username', createUserDto.username);
-
-    let message = await this.validatorField.IsFieldRegistered(
-      dictionary,
-      'users'
-    );
-
-    if (UserType.ADMIN) {
-      message = await this.establishmentsService.validateEstablishments(
-        createUserDto.establishment,
-        message
-      );
-    }
-
-    message = this.cpfStrategy.validate(createUserDto, message);
-    message = this.telephoneStrategy.validate(createUserDto, message);
+    var message = await this.validadeUser(createUserDto, new Array<string>());
 
     if (message.length > 0) return message;
 
-    const userCreate =
-      createUserDto.typeUser === UserType.ADMIN
-        ? CreateAdmUser.createAdmUserDto(createUserDto)
-        : CreateCommonUser.createCommonUserDto(createUserDto);
+    switch (createUserDto.typeUser) {
+      case UserType.CLIENT:
+        return await this.userRepository.create(
+          CreateCommonUser.createCommonUserDto(createUserDto)
+        );
 
-    const user = await this.userRepository.create(userCreate);
+      case UserType.ADMIN:
+        return await this.userRepository.create(
+          CreateAdmUser.createAdmUserDto(createUserDto)
+        );
+
+      case UserType.EMPLOYEE:
+        const employee = await this.userRepository.create(
+          CreateEmployeeUser.createEmployeeUserDto(createUserDto)
+        );
+        this.employeeService.create({
+          idEstablishment: createUserDto.idEstablishment,
+          idUser: employee.id_user
+        });
+
+      default:
+        message.push('Nao houve atribuição de tipo do usuario');
+        return message;
+    }
   }
 
   async findAll() {
@@ -88,5 +89,32 @@ export class UsersService {
 
   async remove(id: number) {
     return await this.userRepository.deleteByID({ id_user: id });
+  }
+
+  async validadeUser(
+    data: CreateUserDto,
+    message: string[]
+  ): Promise<string[]> {
+    const dictionary = new Map<string, string>();
+    dictionary
+      .set('nr_cpf', data.cpf.replace(/[\s.-]*/gim, ''))
+      .set('ds_email', data.email)
+      .set('ds_username', data.username);
+
+    message = await this.validatorField.IsFieldRegistered(dictionary, 'users');
+    message = this.cpfStrategy.validate(data, message);
+    message = this.telephoneService.validateTelephone(
+      data.listTelephones,
+      message
+    );
+
+    if (data.typeUser === UserType.ADMIN) {
+      message = await this.establishmentsService.validateEstablishments(
+        data.establishment,
+        message
+      );
+    }
+
+    return message;
   }
 }

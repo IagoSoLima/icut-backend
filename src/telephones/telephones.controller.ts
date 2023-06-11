@@ -26,8 +26,8 @@ export class TelephonesController extends BaseController {
   }
 
   @Post()
-  create(@Body() createTelephoneDto: CreateTelephoneDto) {
-    return this.telephonesService.create(createTelephoneDto);
+  create(@Body() createTelephoneDto: CreateTelephoneDto[]) {
+    return this.telephonesService.create(createTelephoneDto['telephones']);
   }
 
   @Get(':id')

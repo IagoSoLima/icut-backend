@@ -10,6 +10,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { ServicesModule } from './services/services.module';
 import { TelephonesModule } from './telephones/telephones.module';
 import { UsersModule } from './users/users.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { UsersModule } from './users/users.module';
     RootModule,
     ScheduleModule,
     EstablishmentsModule,
-    ServicesModule
+    ServicesModule,
+    EmployeesModule
   ],
   providers: [
     {

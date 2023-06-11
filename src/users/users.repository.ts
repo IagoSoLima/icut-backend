@@ -6,7 +6,9 @@ import { PrismaService } from '~/common/prisma';
 export class UsersRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async create(data: Prisma.UsersUncheckedCreateInput): Promise<Users> {
+  async create(
+    data: Prisma.UsersUncheckedCreateWithoutEstablishmentInput
+  ): Promise<Users> {
     return await this.prismaService.users.create({ data });
   }
 

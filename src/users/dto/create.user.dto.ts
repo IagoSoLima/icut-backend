@@ -33,6 +33,9 @@ export class CreateUserDto {
   typeUser: number;
 
   @ApiProperty()
+  idEstablishment?: number;
+
+  @ApiProperty()
   @IsNotEmpty()
   listTelephones: Array<CreateTelephoneDto>;
 
