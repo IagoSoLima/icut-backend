@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppLogger } from '~/app.logger';
-import { PrismaService } from '~/common/prisma';
+import { EmployeesRepository } from '~/employees/employees.repository';
 import { ScheduleRepository } from '~/schedule/schedule.repository';
 import { ServicesRepository } from '~/services/services.repository';
 import { ScheduleService } from './schedule.service';
@@ -13,9 +13,14 @@ describe('ScheduleService', () => {
       providers: [
         ScheduleService,
         AppLogger,
-        ScheduleRepository,
-        ServicesRepository,
-        PrismaService,
+        {
+          provide: ServicesRepository,
+          useValue: jest.fn()
+        },
+        {
+          provide: EmployeesRepository,
+          useValue: jest.fn()
+        },
         {
           provide: ScheduleRepository,
           useValue: {
