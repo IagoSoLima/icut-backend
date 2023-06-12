@@ -1,7 +1,7 @@
 _id: req_7a979a7ba5214026afd8e422101e107d
 type: Request
 parentId: fld_a001b82deb2642b0b1522f72b00a2355
-modified: 1686528164704
+modified: 1686533016378
 created: 1686359709116
 url: "{{ _.baseurl }}/v1/schedule"
 name: Create
@@ -12,10 +12,11 @@ body:
   text: |-
     {
     	"service_id": 2,
-    	"date_start": "2023-06-12T15:30:00",
+    	"date_start": "2023-06-12T17:00:00",
     	"payment_method": 1,
     	"establishment": 1,
     	"employee": 1
+
     }
 parameters: []
 headers:
