@@ -12,7 +12,7 @@ export class CreateScheduleRequestDTO {
   @Expose({ name: 'service_id' })
   @Type(() => Number)
   @IsNotEmpty({
-    message: 'Por favor fornece o o serviço'
+    message: 'SERVICE_IS_REQUIRED'
   })
   serviceId: number;
 
@@ -25,7 +25,7 @@ export class CreateScheduleRequestDTO {
   @Expose({ name: 'date_start' })
   @Type(() => Date)
   @IsNotEmpty({
-    message: 'Por favor fornece a data e hora inicial do agendamento'
+    message: 'START_DATE_IS_REQUIRED'
   })
   dateStart: Date;
 
@@ -37,7 +37,7 @@ export class CreateScheduleRequestDTO {
   })
   @Expose({ name: 'payment_method' })
   @IsNotEmpty({
-    message: 'Por favor fornece o método de pagamento'
+    message: 'PAYMENT_METHOD_IS_REQUIRED'
   })
   @Type(() => Number)
   paymentMethod: number;
@@ -51,7 +51,14 @@ export class CreateScheduleRequestDTO {
   @Expose({ name: 'establishment' })
   @Type(() => Number)
   @IsNotEmpty({
-    message: 'Por favor fornece o estabelecimento'
+    message: 'ESTABLISHMENT_IS_REQUIRED'
   })
   establishment: number;
+
+  @Expose({ name: 'employee' })
+  @Type(() => Number)
+  @IsNotEmpty({
+    message: 'EMPLOYEE_IS_REQUIRED'
+  })
+  employee: number;
 }

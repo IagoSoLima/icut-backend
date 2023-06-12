@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppLogger } from '~/app.logger';
 import { PrismaService } from '~/common/prisma';
+import { EmployeesModule } from '~/employees/employees.module';
 import { ServicesModule } from '~/services/services.module';
 import { ScheduleController } from './schedule.controller';
 import { ScheduleRepository } from './schedule.repository';
@@ -15,7 +16,7 @@ const dependencies = [
 
 @Module({
   controllers: [ScheduleController],
-  imports: [ServicesModule],
+  imports: [ServicesModule, EmployeesModule],
   providers: dependencies,
   exports: dependencies
 })

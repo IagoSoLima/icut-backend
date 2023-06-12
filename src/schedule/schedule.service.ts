@@ -10,8 +10,12 @@ import {
 import { UserType } from '~/common/enum';
 import { UnexpectedError } from '~/common/errors';
 import { DateUtil } from '~/common/utils';
+import { EmployeesRepository } from '~/employees/employees.repository';
 import { AvailableHoursInDayResponseDTO } from '~/schedule/dto/response';
-import { AvailableHoursInDayStrategy } from '~/schedule/strategies/available-hours-in-day.stratgey';
+import {
+  AvailableHoursInDayStrategy,
+  AvailableHoursStrategy
+} from '~/schedule/strategies';
 import { ServicesRepository } from '~/services/services.repository';
 import { CreateScheduleParamsDTO } from './dto';
 import { ScheduleRepository } from './schedule.repository';
@@ -19,20 +23,30 @@ import { ScheduleRepository } from './schedule.repository';
 @Injectable()
 export class ScheduleService {
   private availableHoursInDayStrategy: AvailableHoursInDayStrategy;
+  private availableHoursStrategy: AvailableHoursStrategy;
   private messageError: string[];
 
   constructor(
     private readonly scheduleRepository: ScheduleRepository,
     private readonly servicesRepository: ServicesRepository,
+    private readonly employeeRepository: EmployeesRepository,
     private readonly logger: AppLogger
   ) {
     this.logger.setContext(ScheduleService.name);
     this.availableHoursInDayStrategy = new AvailableHoursInDayStrategy(this);
+    this.availableHoursStrategy = new AvailableHoursStrategy();
     this.messageError = [];
   }
 
   async create(params: CreateScheduleParamsDTO) {
-    const { user, dateStart, paymentMethod, serviceId, establishment } = params;
+    const {
+      user,
+      dateStart,
+      paymentMethod,
+      serviceId,
+      establishment,
+      employee: employeeId
+    } = params;
 
     if (user.userType === UserType.EMPLOYEE) {
       const errorLoggerMessage = 'Employee can not create schedule';
@@ -43,7 +57,6 @@ export class ScheduleService {
       });
 
       this.messageError.push(errorMessage);
-      // throw new UnexpectedError(errorMessage);
     }
 
     const service = await this.servicesRepository.findOne({
@@ -58,8 +71,20 @@ export class ScheduleService {
         error: errorLoggerMessage
       });
       this.messageError.push(errorMessage);
+    }
 
-      // throw new UnexpectedError(errorMessage);
+    const employee = this.employeeRepository.findOne({
+      id_employees: employeeId
+    });
+
+    if (!employee) {
+      const errorLoggerMessage = 'Employee not found';
+      const errorMessage = 'EMPLOYEE_NOT_FOUND';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      this.messageError.push(errorMessage);
     }
 
     const dateIsPast = DateUtil.isPast(dateStart);
@@ -73,8 +98,6 @@ export class ScheduleService {
       });
 
       this.messageError.push(errorMessage);
-
-      // throw new UnexpectedError(errorMessage);
     }
 
     const [hour, minutes, seconds] = service.time_duration.split(':');
@@ -87,13 +110,6 @@ export class ScheduleService {
 
     const endDate = DateUtil.set(new Date(dateStart), serviceDuration);
 
-    // const appointment = await this.scheduleRepository.findFirst({
-    //   where: {
-    //     dt_schedule_initial: dateStart,
-    //     fk_id_establishment: establishment
-    //   }
-    // });
-
     const firstSchedule = new Date(dateStart);
     firstSchedule.setHours(DEFAULT_HOUR_START);
     firstSchedule.setMinutes(0);
@@ -105,6 +121,7 @@ export class ScheduleService {
     const appointments = await this.scheduleRepository.findAll({
       where: {
         fk_id_establishment: establishment,
+        fk_id_employee: employeeId,
         dt_schedule_initial: {
           gte: firstSchedule
         },
@@ -123,7 +140,8 @@ export class ScheduleService {
           year: dateStart.getFullYear(),
           startHour: DEFAULT_HOUR_START,
           endDate,
-          startDate: dateStart
+          startDate: dateStart,
+          intervalMinutes: DEFAULT_MINUTE_INCREMENT
         },
         []
       );
@@ -138,14 +156,13 @@ export class ScheduleService {
         error: errorLoggerMessage
       });
       this.messageError.push(errorMessage);
-
-      // throw new UnexpectedError(errorMessage);
     }
 
     if (this.messageError.length > 0) {
-      throw new UnexpectedError(
-        this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS)
-      );
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new UnexpectedError(messageError);
     }
 
     return await this.scheduleRepository.create({
@@ -153,6 +170,7 @@ export class ScheduleService {
       dt_schedule_end: endDate,
       fk_id_service: serviceId,
       fk_id_establishment: establishment,
+      fk_id_employee: employeeId,
       fk_id_establishment_payment: paymentMethod,
       fk_id_user: user.id
     });
@@ -215,13 +233,19 @@ export class ScheduleService {
           const endMinutes = appointment =>
             DateUtil.getMinutes(appointment.dt_schedule_end);
 
-          return (
-            (startHour(appointment) === hour &&
-              startMinutes(appointment) === minutes) ||
-            (endHour(appointment) === hour &&
-              endMinutes(appointment) === minutes) ||
-            (startHour(appointment) <= hour && endHour(appointment) >= hour)
+          const available = this.availableHoursStrategy.validate(
+            {
+              endHour: endHour(appointment),
+              endMinutes: endMinutes(appointment),
+              startHour: startHour(appointment),
+              startMinutes: startMinutes(appointment),
+              hour,
+              minutes
+            },
+            []
           );
+
+          return available.length <= 0;
         });
 
         const compareDate = new Date(year, month - 1, day, hour, minutes);
@@ -239,12 +263,12 @@ export class ScheduleService {
   }
 
   async listDayAvailableService(params: {
-    establishmentId: number;
+    employeeId: number;
     day: number;
     month: number;
     year: number;
   }) {
-    const { establishmentId } = params;
+    const { employeeId } = params;
     let { day, month, year } = params;
 
     if (!day) day = new Date().getDate();
@@ -261,7 +285,7 @@ export class ScheduleService {
 
     const appointments = await this.scheduleRepository.findAll({
       where: {
-        fk_id_establishment: establishmentId,
+        fk_id_employee: employeeId,
         dt_schedule_initial: {
           gte: firstSchedule
         },
@@ -283,11 +307,11 @@ export class ScheduleService {
   }
 
   async listProviderMonthAvailabilityService(params: {
-    establishmentId: number;
+    employeeId: number;
     month: number;
     year: number;
   }) {
-    const { establishmentId } = params;
+    const { employeeId } = params;
     let { month, year } = params;
 
     if (!month) month = new Date().getMonth() + 1;
@@ -321,7 +345,7 @@ export class ScheduleService {
 
     const appointments = await this.scheduleRepository.findAll({
       where: {
-        fk_id_establishment: establishmentId,
+        fk_id_employee: employeeId,
         dt_schedule_initial: {
           gte: firstSchedule
         },

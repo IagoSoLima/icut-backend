@@ -4,8 +4,10 @@ import { EmployeesRepository } from '~/employees/employees.repository';
 import { EmployeesController } from './employees.controller';
 import { EmployeesService } from './employees.service';
 
+const dependencies = [EmployeesService, EmployeesRepository, PrismaService];
 @Module({
   controllers: [EmployeesController],
-  providers: [EmployeesService, EmployeesRepository, PrismaService]
+  providers: dependencies,
+  exports: dependencies
 })
 export class EmployeesModule {}

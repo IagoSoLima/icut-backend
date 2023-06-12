@@ -37,4 +37,12 @@ export class EmployeesRepository {
       throw new UnexpectedError(err);
     }
   }
+
+  async findOne(
+    surveyWhereUniqueInput: Prisma.EmployeesWhereUniqueInput
+  ): Promise<Employees | null> {
+    return this.prismaService.employees.findUnique({
+      where: surveyWhereUniqueInput
+    });
+  }
 }

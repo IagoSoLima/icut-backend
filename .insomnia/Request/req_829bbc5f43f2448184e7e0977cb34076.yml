@@ -1,0 +1,60 @@
+_id: req_829bbc5f43f2448184e7e0977cb34076
+type: Request
+parentId: fld_139b497c1c734918a014d28936247dc5
+modified: 1686513227962
+created: 1686513227962
+url: '{{ _.baseurl }}/v1/users'
+name: CreateAdm
+description: ''
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"username": "ewqsdcxdsadsadsazcaa",
+    	"password": "testesteste",
+    	"email": "email@dsadsadsadsaqew.com",
+    	"firstName": "Teste",
+    	"lastName": "Silva",
+    	"cpf": "868.419.210-97",
+    	"typeUser": 2,
+    	"listTelephones": [
+    		{
+    			"telephoneNumber": "11998765432",
+    			"telephoneDescription": "Meu telefone"
+    		},
+    		{
+    			"telephoneNumber": "11998765432",
+    			"telephoneDescription": "Meu telefone"
+    		}
+    	],
+    	"establishment": {
+    		"corporateName": "De americanas new",
+    		"representativeName": "USA",
+    		"emailEstablishment": "hohoh@hei321eas.com",
+    		"cnpj": "61.902.085/0001-98",
+    		"logo": "links"
+    	}
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_e0b7418d48cd4263bec16beb8a0a7a45
+  - id: pair_465298ff688d4deca6ac6a76dc6de90e
+    name: Authorization
+    value: Bearer 9e50a61ff446bd76cb4ace14596ab31c52aff25c
+    description: ''
+    disabled: true
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1685061105267
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -6,11 +6,11 @@ import { EstablishmentsModule } from '~/establishments/establishments.module';
 import { RootModule } from '~/root/root.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
+import { EmployeesModule } from './employees/employees.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { ServicesModule } from './services/services.module';
 import { TelephonesModule } from './telephones/telephones.module';
 import { UsersModule } from './users/users.module';
-import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
