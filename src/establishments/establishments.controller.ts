@@ -8,6 +8,7 @@ import {
   Post
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UnexpectedError } from '~/common/errors';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
 import { EstablishmentsService } from './establishments.service';
@@ -30,6 +31,15 @@ export class EstablishmentsController {
   @Get('/adm/:id')
   findByAdmId(@Param('id') id: string) {
     return this.establishmentsService.findEstablishmentByAdmId(+id);
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    try {
+      return this.establishmentsService.findEstablishmentById(+id);
+    } catch (err) {
+      throw new UnexpectedError(err);
+    }
   }
 
   @Get('/relation/:id')

@@ -29,6 +29,9 @@ export class UserDto {
   typeUser?: number;
 
   @ApiProperty()
+  active: boolean;
+
+  @ApiProperty()
   listTelephones?: Array<UserTelephoneDto>;
 
   static factoryUserTelephone(data: Users & { telephone: Telephones[] }) {
@@ -38,6 +41,7 @@ export class UserDto {
       email: data.ds_email,
       firstName: data.ds_user_name,
       lastName: data.ds_user_lastname,
+      active: data.active,
       listTelephones: data.telephone.map(telefone => {
         return UserTelephoneDto.factory(telefone);
       })
@@ -55,6 +59,7 @@ export class UserDto {
       lastName: data.ds_user_lastname,
       cpf: data.nr_cpf,
       typeUser: data.fk_id_type_user,
+      active: data.active,
       listTelephones: data.telephone.map(telefone => {
         return UserTelephoneDto.factory(telefone);
       })
