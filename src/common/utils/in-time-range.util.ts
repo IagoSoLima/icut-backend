@@ -12,6 +12,7 @@ export function isWithinTimeRange(params: {
   return (
     (startHour === hour && startMinutes === minutes) ||
     (endHour === hour && endMinutes > minutes) ||
+    (startHour === hour && startMinutes <= minutes && endHour > hour) ||
     (startHour < hour && endHour > hour)
   );
 }

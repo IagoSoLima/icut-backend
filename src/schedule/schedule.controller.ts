@@ -90,13 +90,14 @@ export class ScheduleController {
   @Put(':id')
   async update(
     @Param('id') id: string,
+    @GetUser() user: UserPayload,
     @Body() updateScheduleDto: UpdateScheduleRequestDTO
   ) {
     try {
-      const response = await this.scheduleService.update(
-        +id,
-        updateScheduleDto
-      );
+      const response = await this.scheduleService.update(+id, {
+        user,
+        ...updateScheduleDto
+      });
       return ScheduleResponseDTO.factory(response);
     } catch (error) {
       const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);

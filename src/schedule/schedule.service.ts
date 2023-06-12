@@ -21,7 +21,7 @@ import {
   CheckHoursToDoActionStrategy
 } from '~/schedule/strategies';
 import { ServicesRepository } from '~/services/services.repository';
-import { CreateScheduleParamsDTO } from './dto';
+import { CreateScheduleParamsDTO, UpdateScheduleParamsDTO } from './dto';
 import { ScheduleRepository } from './schedule.repository';
 
 @Injectable()
@@ -105,6 +105,7 @@ export class ScheduleService {
       this.messageError.push(errorMessage);
     }
 
+    //TODO colocar em uma nova função para usar no update
     const dateIsPast = DateUtil.isPast(dateStart);
 
     if (dateIsPast) {
@@ -232,8 +233,156 @@ export class ScheduleService {
     });
   }
 
-  update(id: number, updateScheduleDto) {
-    return `This action updates a #${id} schedule`;
+  async update(id: number, params: UpdateScheduleParamsDTO) {
+    const { dateStart, user } = params;
+
+    const appointment = await this.scheduleRepository.findOne({
+      id_schedules: id
+    });
+
+    if (!appointment) {
+      const errorLoggerMessage = 'Schedule not found';
+      const errorMessage = 'SCHEDULE_NOT_FOUND';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      this.messageError.push(errorMessage);
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new Error(messageError);
+    }
+
+    if (user.userType === UserType.EMPLOYEE) {
+      const errorLoggerMessage = 'Employee can not update schedule';
+      const errorMessage = 'EMPLOYEE_CANT_UPDATE';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+
+      this.messageError.push(errorMessage);
+    }
+
+    if (user.userType === UserType.CLIENT) {
+      const errorCheckHoursToDoActionStrategy =
+        this.checkHoursToDoActionStrategy.validate(
+          {
+            date: appointment.dt_schedule_initial
+          },
+          []
+        );
+
+      const isTwoOrMoreHoursBeforeAppointment =
+        errorCheckHoursToDoActionStrategy.length === 0;
+
+      if (!isTwoOrMoreHoursBeforeAppointment) {
+        const errorLoggerMessage = 'Schedule not found';
+
+        const errorMessage = `EXECUTE_ACTION_BEFORE_${DEFAULT_LIMIT_HOUR_TO_DO_ACTION_IN_SCHEDULE}_HOURS`;
+        this.logger.fail({
+          category: 'SCHEDULE_SERVICE_ERROR',
+          error: errorLoggerMessage
+        });
+        this.messageError.push(errorMessage);
+      }
+    }
+
+    const service = await this.servicesRepository.findOne({
+      id_service: appointment.fk_id_service
+    });
+
+    const dateIsPast = DateUtil.isPast(dateStart);
+
+    if (dateIsPast) {
+      const errorLoggerMessage = 'Date is past';
+      const errorMessage = 'DATE_IS_PAST';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+
+      this.messageError.push(errorMessage);
+    }
+
+    const [hour, minutes, seconds] = service.time_duration.split(':');
+
+    const serviceDuration = {
+      hours: dateStart.getHours() + Number(hour),
+      minutes: dateStart.getMinutes() + Number(minutes),
+      seconds: dateStart.getSeconds() + Number(seconds)
+    };
+
+    const endDate = DateUtil.set(new Date(dateStart), serviceDuration);
+
+    const firstSchedule = new Date(dateStart);
+    firstSchedule.setHours(DEFAULT_HOUR_START);
+    firstSchedule.setMinutes(0);
+
+    const lastSchedule = new Date(dateStart);
+    lastSchedule.setHours(DEFAULT_HOUR_START + DEFAULT_QUANTITY_HOURS_PER_DAY);
+    lastSchedule.setMinutes(0);
+
+    const appointments = await this.scheduleRepository.findAll({
+      where: {
+        fk_id_establishment: appointment.fk_id_establishment,
+        fk_id_employee: appointment.fk_id_employee,
+        dt_schedule_initial: {
+          gte: firstSchedule
+        },
+        dt_schedule_end: {
+          lte: lastSchedule
+        },
+        NOT: {
+          id_schedules: id
+        }
+      }
+    });
+
+    const messageAvailableHoursInDayStrategy =
+      this.availableHoursInDayStrategy.validate(
+        {
+          appointments,
+          day: dateStart.getDate(),
+          month: dateStart.getMonth() + 1,
+          year: dateStart.getFullYear(),
+          startHour: DEFAULT_HOUR_START,
+          endDate,
+          startDate: dateStart,
+          intervalMinutes: DEFAULT_MINUTE_INCREMENT
+        },
+        []
+      );
+    const hasNotAnyHourAvailableThisService =
+      messageAvailableHoursInDayStrategy.length > 0;
+
+    if (hasNotAnyHourAvailableThisService) {
+      const errorLoggerMessage = 'No hour available this service';
+      const errorMessage = 'NO_HOUR_AVAILABLE_THIS_SERVICE';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      this.messageError.push(errorMessage);
+    }
+
+    if (this.messageError.length > 0) {
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new UnexpectedError(messageError);
+    }
+
+    return await this.scheduleRepository.update({
+      where: {
+        id_schedules: id
+      },
+      data: {
+        dt_schedule_initial: dateStart,
+        dt_schedule_end: endDate
+      }
+    });
   }
 
   async remove(id: number) {
