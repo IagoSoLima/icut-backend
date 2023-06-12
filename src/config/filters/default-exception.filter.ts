@@ -39,7 +39,6 @@ export class DefaultExceptionsFilter implements ExceptionFilter {
           };
 
     const message = body.message ?? body;
-    console.log('filter', message);
 
     response.status(status).json({
       statusCode: status,

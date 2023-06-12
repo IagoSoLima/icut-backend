@@ -1,3 +1,4 @@
+import { differenceInMinutes } from './difference-in-minutes.util';
 import { format } from './format.util';
 import { getDate } from './get-date.util';
 import { getDaysInMonth } from './get-days-in-month.util';
@@ -12,6 +13,7 @@ import { parse } from './parse.util';
 import { set } from './set.util';
 
 const DateUtil = {
+  differenceInMinutes,
   format,
   getYesterdayDate,
   getDate,

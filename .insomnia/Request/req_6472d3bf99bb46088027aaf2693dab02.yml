@@ -1,0 +1,24 @@
+_id: req_6472d3bf99bb46088027aaf2693dab02
+type: Request
+parentId: fld_1f66e6dc6dbd48f392e19e4f4611df89
+modified: 1686513202361
+created: 1686513202361
+url: "{{ _.baseurl }}/v1/establishments/relation/1"
+name: Relation
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1686405483561.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
