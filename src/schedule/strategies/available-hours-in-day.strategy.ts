@@ -43,16 +43,6 @@ export class AvailableHoursInDayStrategy implements Strategy<StrategyType> {
     const startMinutesService = startDate.getMinutes();
     const endMinutesService = endDate.getMinutes();
 
-    // const checkAvailableHoursToAppointment = availability.filter(available =>
-    //   isWithinTimeRange({
-    //     startHour: startDate.getHours(),
-    //     endHour: endDate.getHours(),
-    //     endMinutes: endDate.getMinutes(),
-    //     startMinutes: startDate.getMinutes(),
-    //     hour: available.hour,
-    //     minutes: available.minutes
-    //   })
-    // );
     const indexFirstSlotToAppointment = availability.findIndex(
       available =>
         available.hour === startHourService &&

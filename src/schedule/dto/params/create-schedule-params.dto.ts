@@ -6,4 +6,5 @@ export type CreateScheduleParamsDTO = {
   dateStart: Date;
   paymentMethod: number;
   establishment: number;
+  employee: number;
 };

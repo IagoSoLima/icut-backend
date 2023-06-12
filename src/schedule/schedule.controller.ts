@@ -118,15 +118,15 @@ export class ScheduleController {
   @ApiOkResponse({ status: 201, description: 'Return not content' })
   @ApiUnauthorizedResponse({ type: UnauthorizedRequestDto })
   @ApiBadRequestResponse({ type: BadRequestDto })
-  @Get('day-available/:establishmentId')
+  @Get('day-available/:employeeId')
   async listDayAvailableService(
-    @Param('establishmentId') establishmentId: number,
+    @Param('employeeId') employeeId: number,
     @Query() query: ListDayAvailableServiceQueryDTO
   ) {
     try {
       const { day, month, year } = query;
       return this.scheduleService.listDayAvailableService({
-        establishmentId,
+        employeeId,
         day,
         month,
         year
@@ -140,15 +140,15 @@ export class ScheduleController {
   @ApiOkResponse({ status: 201, description: 'Return not content' })
   @ApiUnauthorizedResponse({ type: UnauthorizedRequestDto })
   @ApiBadRequestResponse({ type: BadRequestDto })
-  @Get('month-available/:establishmentId')
+  @Get('month-available/:employeeId')
   async listMonthAvailableService(
-    @Param('establishmentId') establishmentId: number,
+    @Param('employeeId') employeeId: number,
     @Query() query: ListDayAvailableServiceQueryDTO
   ) {
     try {
       const { month, year } = query;
       return this.scheduleService.listProviderMonthAvailabilityService({
-        establishmentId,
+        employeeId,
         month,
         year
       });

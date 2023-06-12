@@ -38,7 +38,7 @@ export class DefaultExceptionsFilter implements ExceptionFilter {
             message: exception.stack
           };
 
-    const message = body.message ?? body;
+    const message = body?.message ? body.message : body;
 
     response.status(status).json({
       statusCode: status,

@@ -10,6 +10,7 @@ import {
 import { UserType } from '~/common/enum';
 import { UnexpectedError } from '~/common/errors';
 import { DateUtil } from '~/common/utils';
+import { EmployeesRepository } from '~/employees/employees.repository';
 import { AvailableHoursInDayResponseDTO } from '~/schedule/dto/response';
 import {
   AvailableHoursInDayStrategy,
@@ -28,6 +29,7 @@ export class ScheduleService {
   constructor(
     private readonly scheduleRepository: ScheduleRepository,
     private readonly servicesRepository: ServicesRepository,
+    private readonly employeeRepository: EmployeesRepository,
     private readonly logger: AppLogger
   ) {
     this.logger.setContext(ScheduleService.name);
@@ -37,7 +39,14 @@ export class ScheduleService {
   }
 
   async create(params: CreateScheduleParamsDTO) {
-    const { user, dateStart, paymentMethod, serviceId, establishment } = params;
+    const {
+      user,
+      dateStart,
+      paymentMethod,
+      serviceId,
+      establishment,
+      employee: employeeId
+    } = params;
 
     if (user.userType === UserType.EMPLOYEE) {
       const errorLoggerMessage = 'Employee can not create schedule';
@@ -57,6 +66,20 @@ export class ScheduleService {
     if (!service) {
       const errorLoggerMessage = 'Service not found';
       const errorMessage = 'SERVICE_NOT_FOUND';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      this.messageError.push(errorMessage);
+    }
+
+    const employee = this.employeeRepository.findOne({
+      id_employees: employeeId
+    });
+
+    if (!employee) {
+      const errorLoggerMessage = 'Employee not found';
+      const errorMessage = 'EMPLOYEE_NOT_FOUND';
       this.logger.fail({
         category: 'SCHEDULE_SERVICE_ERROR',
         error: errorLoggerMessage
@@ -87,13 +110,6 @@ export class ScheduleService {
 
     const endDate = DateUtil.set(new Date(dateStart), serviceDuration);
 
-    // const appointment = await this.scheduleRepository.findFirst({
-    //   where: {
-    //     dt_schedule_initial: dateStart,
-    //     fk_id_establishment: establishment
-    //   }
-    // });
-
     const firstSchedule = new Date(dateStart);
     firstSchedule.setHours(DEFAULT_HOUR_START);
     firstSchedule.setMinutes(0);
@@ -105,6 +121,7 @@ export class ScheduleService {
     const appointments = await this.scheduleRepository.findAll({
       where: {
         fk_id_establishment: establishment,
+        fk_id_employee: employeeId,
         dt_schedule_initial: {
           gte: firstSchedule
         },
@@ -153,6 +170,7 @@ export class ScheduleService {
       dt_schedule_end: endDate,
       fk_id_service: serviceId,
       fk_id_establishment: establishment,
+      fk_id_employee: employeeId,
       fk_id_establishment_payment: paymentMethod,
       fk_id_user: user.id
     });
@@ -245,12 +263,12 @@ export class ScheduleService {
   }
 
   async listDayAvailableService(params: {
-    establishmentId: number;
+    employeeId: number;
     day: number;
     month: number;
     year: number;
   }) {
-    const { establishmentId } = params;
+    const { employeeId } = params;
     let { day, month, year } = params;
 
     if (!day) day = new Date().getDate();
@@ -267,7 +285,7 @@ export class ScheduleService {
 
     const appointments = await this.scheduleRepository.findAll({
       where: {
-        fk_id_establishment: establishmentId,
+        fk_id_employee: employeeId,
         dt_schedule_initial: {
           gte: firstSchedule
         },
@@ -289,11 +307,11 @@ export class ScheduleService {
   }
 
   async listProviderMonthAvailabilityService(params: {
-    establishmentId: number;
+    employeeId: number;
     month: number;
     year: number;
   }) {
-    const { establishmentId } = params;
+    const { employeeId } = params;
     let { month, year } = params;
 
     if (!month) month = new Date().getMonth() + 1;
@@ -327,7 +345,7 @@ export class ScheduleService {
 
     const appointments = await this.scheduleRepository.findAll({
       where: {
-        fk_id_establishment: establishmentId,
+        fk_id_employee: employeeId,
         dt_schedule_initial: {
           gte: firstSchedule
         },

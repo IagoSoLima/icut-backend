@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Employees, Prisma } from '@prisma/client';
 import { PrismaService } from '~/common/prisma';
 
 @Injectable()
@@ -8,5 +8,13 @@ export class EmployeesRepository {
 
   async createEmployee(data: Prisma.EmployeesCreateArgs) {
     await this.prismaService.employees.create(data);
+  }
+
+  async findOne(
+    surveyWhereUniqueInput: Prisma.EmployeesWhereUniqueInput
+  ): Promise<Employees | null> {
+    return this.prismaService.employees.findUnique({
+      where: surveyWhereUniqueInput
+    });
   }
 }
