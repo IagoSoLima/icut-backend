@@ -110,7 +110,8 @@ export class ScheduleController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
-      return this.scheduleService.remove(+id);
+      const response = await this.scheduleService.remove(+id);
+      return response;
     } catch (error) {
       const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
       throw new HttpException(arrayError, HttpStatus.BAD_REQUEST);

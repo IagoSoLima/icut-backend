@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppLogger } from '~/app.logger';
 import { EmployeesRepository } from '~/employees/employees.repository';
+import { EstablishmentsRepository } from '~/establishments/establishments.repository';
 import { ScheduleRepository } from '~/schedule/schedule.repository';
 import { ServicesRepository } from '~/services/services.repository';
 import { ScheduleService } from './schedule.service';
@@ -19,6 +20,10 @@ describe('ScheduleService', () => {
         },
         {
           provide: EmployeesRepository,
+          useValue: jest.fn()
+        },
+        {
+          provide: EstablishmentsRepository,
           useValue: jest.fn()
         },
         {

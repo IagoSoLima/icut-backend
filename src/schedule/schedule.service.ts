@@ -264,7 +264,7 @@ export class ScheduleService {
       );
 
     const isTwoOrMoreHoursBeforeAppointment =
-      errorCheckHoursToDoActionStrategy.length > 0;
+      errorCheckHoursToDoActionStrategy.length === 0;
 
     if (!isTwoOrMoreHoursBeforeAppointment) {
       const errorLoggerMessage = 'Schedule not found';
