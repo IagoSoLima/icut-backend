@@ -39,6 +39,14 @@ export class EstablishmentsRepository {
     return await this.prismaService.establishments.findFirst(data);
   }
 
+  async findEstablishmentById(
+    data: Prisma.EstablishmentsWhereUniqueInput
+  ): Promise<Establishments | null> {
+    return await this.prismaService.establishments.findUnique({
+      where: data
+    });
+  }
+
   async update(data: Prisma.EstablishmentsUpdateArgs) {
     return await this.prismaService.establishments.update(data);
   }

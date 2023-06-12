@@ -56,11 +56,21 @@ export class EstablishmentsService {
     return EstablishmentsDto.factory(establishment);
   }
 
-  async update(id: number, updateEstablishmentDto: UpdateEstablishmentDto) {
-    return await this.establishmentsRepository.update({
-      where: {
+  async findEstablishmentById(id: number) {
+    const establishment =
+      await this.establishmentsRepository.findEstablishmentById({
         id_establishment: id
-      },
+      });
+    if (establishment === null) {
+      throw new UnexpectedError('Nao retornou nenhum estabelecimento');
+    }
+    return EstablishmentsDto.factory(establishment);
+  }
+
+  async update(id: number, updateEstablishmentDto: UpdateEstablishmentDto) {
+    console.log(updateEstablishmentDto);
+    return await this.establishmentsRepository.update({
+      where: { id_establishment: id },
       data: {
         ds_corporate_name: updateEstablishmentDto.corporateName,
         ds_representative_name: updateEstablishmentDto.representativeName,

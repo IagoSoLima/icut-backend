@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { UserType } from '~/common/enum';
+import { UnexpectedError } from '~/common/errors';
 import { ValidatorService } from '~/common/validators';
 import { EmployeesService } from '~/employees/employees.service';
 import { EstablishmentsService } from '~/establishments/establishments.service';
@@ -77,18 +78,21 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.userRepository.update({
-      where: { id_user: id },
-      data: {
-        ds_username: updateUserDto.username,
-        ds_password: updateUserDto.password,
-        ds_email: updateUserDto.email,
-        ds_user_name: updateUserDto.firstName,
-        ds_user_lastname: updateUserDto.lastName,
-        nr_cpf: updateUserDto.cpf.replace(/[\s.-]*/gim, ''),
-        fk_id_type_user: updateUserDto.typeUser
-      }
-    });
+    try {
+      return await this.userRepository.update({
+        where: { id_user: id },
+        data: {
+          ds_username: updateUserDto.username,
+          ds_password: updateUserDto.password,
+          ds_email: updateUserDto.email,
+          ds_user_name: updateUserDto.firstName,
+          ds_user_lastname: updateUserDto.lastName,
+          fk_id_type_user: updateUserDto.typeUser
+        }
+      });
+    } catch (err) {
+      throw new UnexpectedError(err);
+    }
   }
 
   async remove(id: number) {
