@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { PasswordEncrypty } from '~/common/utils';
+import * as bcrypt from 'bcryptjs';
 import { IS_DEV } from '../src/app.vars';
 
 const prisma = new PrismaClient();
@@ -16,7 +16,7 @@ const createUser = async () => {
       ds_user_name: 'Teste',
       ds_user_lastname: 'Silva',
       ds_email: 'teste-icut@tuamaeaquelaursa.com',
-      ds_password: PasswordEncrypty.passwordEncrypter('1234'),
+      ds_password: bcrypt.hashSync('1234'),
       ds_username: 'teste',
       fk_id_type_user: 1,
       active: true,
@@ -43,7 +43,7 @@ const createUserAdmin = async () => {
       ds_user_name: 'Empresa Teste',
       ds_user_lastname: 'Silva',
       ds_email: 'teste-icut-company@tuamaeaquelaursa.com',
-      ds_password: PasswordEncrypty.passwordEncrypter('1234'),
+      ds_password: bcrypt.hashSync('1234'),
       ds_username: 'teste-company',
       fk_id_type_user: 2,
       active: true,
