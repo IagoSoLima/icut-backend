@@ -3,16 +3,16 @@ type: Request
 parentId: fld_139b497c1c734918a014d28936247dc5
 modified: 1686513227971
 created: 1686513227971
-url: "{{ _.baseurl }}/v1/users/11"
+url: '{{ _.baseurl }}/v1/users/11'
 name: Delete
-description: ""
+description: ''
 method: DELETE
 body: {}
 parameters: []
 headers: []
 authentication:
   type: bearer
-  token: "{{ _.token }}"
+  token: '{{ _.token }}'
 metaSortKey: -1686266538274
 isPrivate: false
 settingStoreCookies: true

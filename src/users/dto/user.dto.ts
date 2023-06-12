@@ -31,11 +31,25 @@ export class UserDto {
   @ApiProperty()
   listTelephones?: Array<UserTelephoneDto>;
 
-  static factory(data: Users & { telephone: Telephones[] }) {
+  static factoryUserTelephone(data: Users & { telephone: Telephones[] }) {
     const formatedData = {
       id: data.id_user,
       username: data.ds_username,
-      password: data.ds_password,
+      email: data.ds_email,
+      firstName: data.ds_user_name,
+      lastName: data.ds_user_lastname,
+      listTelephones: data.telephone.map(telefone => {
+        return UserTelephoneDto.factory(telefone);
+      })
+    };
+
+    return snakeKeys(formatedData);
+  }
+
+  static factoryUser(data: Users & { telephone: Telephones[] }) {
+    const formatedData = {
+      id: data.id_user,
+      username: data.ds_username,
       email: data.ds_email,
       firstName: data.ds_user_name,
       lastName: data.ds_user_lastname,

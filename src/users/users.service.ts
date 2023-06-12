@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { UserType } from '~/common/enum';
 import { ValidatorService } from '~/common/validators';
 import { EmployeesService } from '~/employees/employees.service';
@@ -11,7 +12,6 @@ import { UpdateUserDto } from './dto/update.user.dto';
 import { UserDto } from './dto/user.dto';
 import { CpfStrategy } from './strategies';
 import { UsersRepository } from './users.repository';
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -25,6 +25,8 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     var message = await this.validadeUser(createUserDto, new Array<string>());
+    const hash = bcrypt.hashSync(createUserDto.password, 5);
+    createUserDto.password = hash;
 
     if (message.length > 0) return message;
 
@@ -35,18 +37,18 @@ export class UsersService {
         );
 
       case UserType.ADMIN:
-        return await this.userRepository.create(
+        const employee = await this.userRepository.createAdm(
           CreateAdmUser.createAdmUserDto(createUserDto)
         );
-
-      case UserType.EMPLOYEE:
-        const employee = await this.userRepository.create(
-          CreateEmployeeUser.createEmployeeUserDto(createUserDto)
-        );
-        this.employeeService.create({
-          idEstablishment: createUserDto.idEstablishment,
+        return this.employeeService.create({
+          idEstablishment: employee.establishment[0].id_establishment,
           idUser: employee.id_user
         });
+
+      case UserType.EMPLOYEE:
+        return await this.userRepository.create(
+          CreateEmployeeUser.createEmployeeUserDto(createUserDto)
+        );
 
       default:
         message.push('Nao houve atribuição de tipo do usuario');
@@ -59,7 +61,9 @@ export class UsersService {
       include: { telephone: true }
     });
 
-    const listUserDto = listUser.map(user => UserDto.factory(user));
+    const listUserDto = listUser.map(user =>
+      UserDto.factoryUserTelephone(user)
+    );
 
     return listUserDto;
   }
@@ -69,7 +73,7 @@ export class UsersService {
 
     if (user === null) return null;
 
-    return UserDto.factory(user);
+    return UserDto.factoryUser(user);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

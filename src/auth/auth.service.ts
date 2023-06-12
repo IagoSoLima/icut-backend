@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AppLogger } from '~/app.logger';
 import { JWT_REFRESH_EXPIRES_IN, JWT_SECRET_EXPIRES_IN } from '~/app.vars';
 import { UserPayload } from '~/common/interfaces';
+import { PasswordEncrypty } from '~/common/utils';
 import { UsersRepository } from '~/users/users.repository';
 import { RefreshTokenResponse, SignInParams, SignInResponse } from './dto';
 
@@ -20,8 +21,8 @@ export class AuthService {
     const { email, password } = params;
     const user = await this.usersRepository.getByEmail(email);
 
-    if (user && user.ds_password === password) {
-      const result: UserPayload = {
+    if (user && PasswordEncrypty.passwordCompare(password, user.ds_password)) {
+      let result: UserPayload = {
         id: user.id_user,
         email: user.ds_email,
         userName: user.ds_username,
@@ -33,6 +34,8 @@ export class AuthService {
         deletedAt: user.deleted_at,
         userType: user.fk_id_type_user
       };
+      if (user.establishment && user.establishment.length > 0)
+        result.idEstablishment = user.establishment[0].id_establishment;
       return result;
     }
     return null;

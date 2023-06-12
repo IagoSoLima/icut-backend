@@ -3,9 +3,9 @@ type: Request
 parentId: fld_1f66e6dc6dbd48f392e19e4f4611df89
 modified: 1686513202335
 created: 1686513202335
-url: "{{ _.baseurl }}/v1/establishments/1"
+url: '{{ _.baseurl }}/v1/establishments/1'
 name: GetById
-description: ""
+description: ''
 method: GET
 body: {}
 parameters: []

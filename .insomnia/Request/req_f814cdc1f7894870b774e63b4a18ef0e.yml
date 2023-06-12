@@ -3,9 +3,9 @@ type: Request
 parentId: fld_3fd8f7fff707424b82881dd1238814dd
 modified: 1686513211131
 created: 1686513211131
-url: "{{ _.baseurl }}/v1/telephones"
+url: '{{ _.baseurl }}/v1/telephones'
 name: Create
-description: ""
+description: ''
 method: POST
 body:
   mimeType: application/json

@@ -1,6 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppLogger } from '~/app.logger';
+import { PasswordEncrypty } from '~/common/utils';
 import { UsersRepository } from '~/users/users.repository';
 import { AuthService } from './auth.service';
 import { JwtStrategy, LocalStrategy, RefreshTokenStrategy } from './strategies';
@@ -90,7 +91,7 @@ describe('AuthService', () => {
         id: 'XXXXXXXXXXXXX',
         email: 'XXXXXXXXXXXXX',
         active: true,
-        ds_password: 'XXXX'
+        ds_password: PasswordEncrypty.passwordEncrypter('XXXX')
       } as any;
 
       usersRepository.getByEmail = jest

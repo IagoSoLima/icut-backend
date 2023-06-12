@@ -11,4 +11,5 @@ export interface UserPayload {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
+  idEstablishment?: number;
 }

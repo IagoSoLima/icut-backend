@@ -3,9 +3,9 @@ type: Request
 parentId: fld_3fd8f7fff707424b82881dd1238814dd
 modified: 1686513211157
 created: 1686513211157
-url: "{{ _.baseurl }}/v1/telephones/5"
+url: '{{ _.baseurl }}/v1/telephones/5'
 name: Update
-description: ""
+description: ''
 method: PATCH
 body:
   mimeType: application/json

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EmployeeDto } from '~/employees/dto/employee.dto';
 import { EmployeesRepository } from '~/employees/employees.repository';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -9,10 +10,8 @@ export class EmployeesService {
 
   async create(createEmployeeDto: CreateEmployeeDto) {
     await this.employeesRepository.createEmployee({
-      data: {
-        fk_id_user: createEmployeeDto.idUser,
-        fk_id_establishment: createEmployeeDto.idEstablishment
-      }
+      fk_id_user: createEmployeeDto.idUser,
+      fk_id_establishment: createEmployeeDto.idEstablishment
     });
   }
 
@@ -20,8 +19,11 @@ export class EmployeesService {
     return `This action returns all employees`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
+  async findEmployeesByEstablishmentId(id: number) {
+    const listEmployees =
+      await this.employeesRepository.findEmployeesByEstablishmentId(id);
+
+    return listEmployees.map(employee => EmployeeDto.factory(employee));
   }
 
   update(id: number, updateEmployeeDto: UpdateEmployeeDto) {

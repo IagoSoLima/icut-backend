@@ -3,16 +3,16 @@ type: Request
 parentId: fld_a001b82deb2642b0b1522f72b00a2355
 modified: 1686414008886
 created: 1686360860517
-url: "{{ _.baseurl }}/v1/schedule/1"
+url: '{{ _.baseurl }}/v1/schedule/1'
 name: FindById
-description: ""
+description: ''
 method: GET
 body: {}
 parameters: []
 headers: []
 authentication:
   type: bearer
-  token: "{{ _.token }}"
+  token: '{{ _.token }}'
 metaSortKey: -1686359731527.5
 isPrivate: false
 settingStoreCookies: true

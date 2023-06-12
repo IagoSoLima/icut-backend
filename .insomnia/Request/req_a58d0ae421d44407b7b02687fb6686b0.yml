@@ -3,9 +3,9 @@ type: Request
 parentId: fld_3fd8f7fff707424b82881dd1238814dd
 modified: 1686513211138
 created: 1686513211138
-url: "{{ _.baseurl }}/v1/telephones/4"
+url: '{{ _.baseurl }}/v1/telephones/4'
 name: FindAllByUserId
-description: ""
+description: ''
 method: GET
 body: {}
 parameters: []

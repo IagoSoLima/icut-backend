@@ -3,31 +3,31 @@ type: Request
 parentId: fld_a001b82deb2642b0b1522f72b00a2355
 modified: 1686519460331
 created: 1686414023548
-url: "{{ _.baseurl }}/v1/schedule/day-available/1"
+url: '{{ _.baseurl }}/v1/schedule/day-available/1'
 name: ListDayAvailableService
-description: ""
+description: ''
 method: GET
 body: {}
 parameters:
   - id: pair_2f0fc13cae394ded95a13de4ab79d96f
     name: day
-    value: "12"
-    description: ""
+    value: '12'
+    description: ''
     disabled: false
   - id: pair_c40c5af2b3424511946727d3dfd53ae1
     name: month
-    value: "06"
-    description: ""
+    value: '06'
+    description: ''
     disabled: true
   - id: pair_4ebd629e5b964b1db0dbc24f04135c2a
     name: year
-    value: "2023"
-    description: ""
+    value: '2023'
+    description: ''
     disabled: true
 headers: []
 authentication:
   type: bearer
-  token: "{{ _.token }}"
+  token: '{{ _.token }}'
 metaSortKey: -1686359600051.375
 isPrivate: false
 settingStoreCookies: true

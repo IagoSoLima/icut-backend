@@ -27,6 +27,11 @@ export class EstablishmentsController {
     return this.establishmentsService.findAll();
   }
 
+  @Get('/adm/:id')
+  findByAdmId(@Param('id') id: string) {
+    return this.establishmentsService.findEstablishmentByAdmId(+id);
+  }
+
   @Get('/relation/:id')
   findEstablishmentRelation(@Param('id') id: string) {
     return this.establishmentsService.findEstablishmentRelation(+id);
