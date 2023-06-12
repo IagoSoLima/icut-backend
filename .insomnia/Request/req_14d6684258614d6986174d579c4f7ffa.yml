@@ -1,0 +1,32 @@
+_id: req_14d6684258614d6986174d579c4f7ffa
+type: Request
+parentId: fld_3fd8f7fff707424b82881dd1238814dd
+modified: 1686513211157
+created: 1686513211157
+url: "{{ _.baseurl }}/v1/telephones/5"
+name: Update
+description: ""
+method: PATCH
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"telephoneNumber": "21987651234",
+    	"telephoneDescription": "Teste"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1686115564815.375
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

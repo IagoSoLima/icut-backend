@@ -1,0 +1,33 @@
+_id: req_47f0eedb555c47d39162b03c57dd4808
+type: Request
+parentId: fld_a001b82deb2642b0b1522f72b00a2355
+modified: 1686496653202
+created: 1686428678308
+url: "{{ _.baseurl }}/v1/schedule/month-available/1"
+name: ListMonthAvailableService
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_c40c5af2b3424511946727d3dfd53ae1
+    name: month
+    value: "05"
+    description: ""
+    disabled: true
+  - id: pair_4ebd629e5b964b1db0dbc24f04135c2a
+    name: year
+    value: "2024"
+    description: ""
+    disabled: true
+headers: []
+authentication:
+  type: bearer
+  token: "{{ _.token }}"
+metaSortKey: -1686359534313.3125
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

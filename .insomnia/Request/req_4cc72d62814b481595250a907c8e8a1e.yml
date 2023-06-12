@@ -1,0 +1,53 @@
+_id: req_4cc72d62814b481595250a907c8e8a1e
+type: Request
+parentId: fld_139b497c1c734918a014d28936247dc5
+modified: 1686513227986
+created: 1686513227986
+url: "{{ _.baseurl }}/v1/users"
+name: CreateCommon
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"username": "teste90",
+    	"password": "testesteste",
+    	"email": "email@teste90.com",
+    	"first_name": "Teste",
+    	"last_name": "Silva",
+    	"cpf": "751.518.090-08",
+    	"type_user": 1,
+    	"list_telephones": [
+    		{
+    			"telephone_number": "11998765432",
+    			"telephone_description": "Meu telefone"
+    		},
+    		{
+    			"telephone_number": "1232134213",
+    			"telephone_description": "Meu telefone"
+    		}
+    	]
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_e0b7418d48cd4263bec16beb8a0a7a45
+  - id: pair_465298ff688d4deca6ac6a76dc6de90e
+    name: Authorization
+    value: Bearer 9e50a61ff446bd76cb4ace14596ab31c52aff25c
+    description: ""
+    disabled: true
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1685061105254.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,23 @@
+_id: req_b479b6a257134487b25a6e2c70bf8857
+type: Request
+parentId: fld_a001b82deb2642b0b1522f72b00a2355
+modified: 1686359787175
+created: 1686359753939
+url: "{{ _.baseurl }}/v1/schedule"
+name: FindAll
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{{ _.token }}"
+metaSortKey: -1686359753939
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

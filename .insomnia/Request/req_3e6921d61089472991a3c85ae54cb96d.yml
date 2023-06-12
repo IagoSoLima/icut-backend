@@ -1,0 +1,24 @@
+_id: req_3e6921d61089472991a3c85ae54cb96d
+type: Request
+parentId: fld_3fd8f7fff707424b82881dd1238814dd
+modified: 1686513211145
+created: 1686513211145
+url: "{{ _.baseurl }}/v1/telephones/4"
+name: Delete
+description: ""
+method: DELETE
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1685663653575
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

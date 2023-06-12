@@ -1,0 +1,29 @@
+_id: req_65282690e8524e9ba156bcae136952f7
+type: Request
+parentId: fld_45410ff465f74071b1caa63c750f1f3c
+modified: 1686440260594
+created: 1686359205623
+url: "{{ _.baseurl }}/v1/auth/login"
+name: Login
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+        "email": "teste-icut@tuamaeaquelaursa.com",
+        "password": "1234"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1686359205623
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

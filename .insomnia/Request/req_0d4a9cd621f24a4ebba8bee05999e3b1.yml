@@ -1,0 +1,24 @@
+_id: req_0d4a9cd621f24a4ebba8bee05999e3b1
+type: Request
+parentId: fld_139b497c1c734918a014d28936247dc5
+modified: 1686513227941
+created: 1686513227941
+url: "{{ _.baseurl }}/v1/users"
+name: FindAll
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1685061105217
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
