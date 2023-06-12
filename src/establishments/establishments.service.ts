@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Establishments } from '@prisma/client';
+import { UnexpectedError } from '~/common/errors';
 import { ValidatorService } from '~/common/validators';
 import { EstablishmentsDto } from '~/establishments/dto/establishment.dto';
 import { EstablishmentsRepository } from '~/establishments/establishments.repository';
@@ -40,6 +41,19 @@ export class EstablishmentsService {
     return await this.establishmentsRepository.findEstablishmentRelation({
       id_establishment: id
     });
+  }
+
+  async findEstablishmentByAdmId(id: number) {
+    const establishment =
+      await this.establishmentsRepository.findEstablishmentByAdmId({
+        where: {
+          id_user_administrator: id
+        }
+      });
+    if (establishment === null) {
+      throw new UnexpectedError('Nao retornou nenhum estabelecimento');
+    }
+    return EstablishmentsDto.factory(establishment);
   }
 
   async update(id: number, updateEstablishmentDto: UpdateEstablishmentDto) {

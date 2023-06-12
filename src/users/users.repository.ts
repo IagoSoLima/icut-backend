@@ -1,15 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Telephones, Users } from '@prisma/client';
+import { Establishments, Prisma, Telephones, Users } from '@prisma/client';
 import { PrismaService } from '~/common/prisma';
 
 @Injectable()
 export class UsersRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async create(
-    data: Prisma.UsersUncheckedCreateWithoutEstablishmentInput
-  ): Promise<Users> {
-    return await this.prismaService.users.create({ data });
+  async create(data: Prisma.UsersUncheckedCreateInput): Promise<Users> {
+    return await this.prismaService.users.create({
+      data
+    });
+  }
+
+  async createAdm(
+    data: Prisma.UsersUncheckedCreateInput
+  ): Promise<Users & { establishment: Establishments[] }> {
+    return await this.prismaService.users.create({
+      data,
+      include: {
+        establishment: true // Carrega as informações do estabelecimento associado
+      }
+    });
   }
 
   async findAll(params: {
@@ -38,7 +49,8 @@ export class UsersRepository {
     return await this.prismaService.users.findFirst({
       where: {
         ds_email: email
-      }
+      },
+      include: { establishment: true }
     });
   }
 

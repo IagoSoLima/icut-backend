@@ -4,7 +4,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateEstablishmentDto {
   @ApiProperty({
-    name: 'Nome do estabelecimento (Barbearia)',
+    name: 'corporate_name',
     example: 'Bardearia do Iago',
     required: true,
     type: String
@@ -17,7 +17,7 @@ export class CreateEstablishmentDto {
   corporateName: string;
 
   @ApiProperty({
-    name: 'Nome do representante do estabelecimento',
+    name: 'representative_name',
     example: 'Iago Lima',
     required: true,
     type: String
@@ -30,7 +30,7 @@ export class CreateEstablishmentDto {
   representativeName: string;
 
   @ApiProperty({
-    name: 'CNPJ do estabelecimento',
+    name: 'cnpj',
     example: '00.000.000/0001-00',
     required: true,
     type: String
@@ -43,7 +43,7 @@ export class CreateEstablishmentDto {
   cnpj: string;
 
   @ApiProperty({
-    name: 'Email do estabelecimento',
+    name: 'email_establishment',
     example: 'estabelecimento@estabelecimento.com',
     required: true,
     type: String
@@ -56,7 +56,7 @@ export class CreateEstablishmentDto {
   emailEstablishment: string;
 
   @ApiProperty({
-    name: 'Logo do estabelecimento',
+    name: 'logo',
     example:
       'https://cdn.leroymerlin.com.br/products/kit_6_placas_decorativas_barbearia_barber_shop_salao_mdf_1567590343_992f_600x600.jpg',
     required: true,
@@ -70,7 +70,7 @@ export class CreateEstablishmentDto {
   logo: string;
 
   @ApiProperty({
-    name: 'Logo do estabelecimento',
+    name: 'id_user',
     example: 1,
     required: true,
     type: Number

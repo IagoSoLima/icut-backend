@@ -111,8 +111,11 @@ export class AuthResponseDTO {
   })
   active: boolean;
 
+  @ApiProperty()
+  idEstablishment: number;
+
   static factory(data: SignInResponse) {
-    const formatedData = {
+    let formatedData = {
       idUser: data.id,
       username: data.userName,
       email: data.email,
@@ -125,9 +128,14 @@ export class AuthResponseDTO {
       active: data.active,
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
-      expiresIn: data.expiresIn
+      expiresIn: data.expiresIn,
+      idEstablishment: null
     };
-
+    if (data.idEstablishment)
+      formatedData = {
+        ...formatedData,
+        idEstablishment: data.idEstablishment
+      };
     return snakeKeys(formatedData);
   }
 }

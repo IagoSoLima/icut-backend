@@ -33,6 +33,12 @@ export class EstablishmentsRepository {
     });
   }
 
+  async findEstablishmentByAdmId(
+    data: Prisma.EstablishmentsFindFirstArgs
+  ): Promise<Establishments | null> {
+    return await this.prismaService.establishments.findFirst(data);
+  }
+
   async update(data: Prisma.EstablishmentsUpdateArgs) {
     return await this.prismaService.establishments.update(data);
   }

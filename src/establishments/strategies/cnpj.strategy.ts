@@ -9,7 +9,6 @@ export class CnpjStrategy implements Strategy<CreateEstablishmentDto> {
     }
 
     var strCNPJ = obj.cnpj.replace(/[\s.-/--]*/gim, '');
-    console.log(strCNPJ);
 
     if (
       strCNPJ === '00000000000000' ||
