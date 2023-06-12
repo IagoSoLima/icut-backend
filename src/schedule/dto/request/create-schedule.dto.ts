@@ -4,7 +4,8 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateScheduleRequestDTO {
   @ApiProperty({
-    name: 'id do serviço escolhido para o agendamento',
+    name: 'service_id',
+    description: 'id do serviço escolhido para o agendamento',
     example: 1,
     required: true,
     type: Number
@@ -17,7 +18,8 @@ export class CreateScheduleRequestDTO {
   serviceId: number;
 
   @ApiProperty({
-    name: 'Data e horário inicial do agendamento',
+    name: 'date_start',
+    description: 'Data e horário inicial do agendamento',
     example: '2022-08-20T10:00:00',
     required: true,
     type: Date
@@ -30,10 +32,11 @@ export class CreateScheduleRequestDTO {
   dateStart: Date;
 
   @ApiProperty({
-    name: 'Meio de pagamento selecionado parao agendamento',
+    name: 'payment_method',
+    description: 'Meio de pagamento selecionado parao agendamento',
     example: 1,
     required: true,
-    type: Date
+    type: Number
   })
   @Expose({ name: 'payment_method' })
   @IsNotEmpty({
@@ -43,7 +46,8 @@ export class CreateScheduleRequestDTO {
   paymentMethod: number;
 
   @ApiProperty({
-    name: 'Estabelecimento que realizará o serviço',
+    name: 'establishment',
+    description: 'Estabelecimento que realizará o serviço',
     example: 1,
     required: true,
     type: Number
@@ -55,6 +59,13 @@ export class CreateScheduleRequestDTO {
   })
   establishment: number;
 
+  @ApiProperty({
+    name: 'employee',
+    description: 'Funcionário que realizará o serviço',
+    example: 1,
+    required: true,
+    type: Number
+  })
   @Expose({ name: 'employee' })
   @Type(() => Number)
   @IsNotEmpty({

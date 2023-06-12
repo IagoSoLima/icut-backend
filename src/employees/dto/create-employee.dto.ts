@@ -4,7 +4,8 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateEmployeeDto {
   @ApiProperty({
-    name: 'Id do funcionario cadastrado',
+    name: 'id_user',
+    description: 'Id do funcionario cadastrado',
     example: 1,
     required: true,
     type: Number
@@ -17,7 +18,8 @@ export class CreateEmployeeDto {
   idUser: number;
 
   @ApiProperty({
-    name: 'Id do estabelecimento',
+    name: 'id_establishment',
+    description: 'Id do estabelecimento',
     example: 1,
     required: true,
     type: Number
