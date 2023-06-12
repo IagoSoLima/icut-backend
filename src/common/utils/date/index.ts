@@ -1,3 +1,4 @@
+import { differenceInHours } from './difference-in-hours.util';
 import { differenceInMinutes } from './difference-in-minutes.util';
 import { format } from './format.util';
 import { getDate } from './get-date.util';
@@ -14,6 +15,7 @@ import { set } from './set.util';
 
 const DateUtil = {
   differenceInMinutes,
+  differenceInHours,
   format,
   getYesterdayDate,
   getDate,

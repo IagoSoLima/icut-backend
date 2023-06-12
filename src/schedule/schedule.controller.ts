@@ -65,8 +65,8 @@ export class ScheduleController {
   @ApiUnauthorizedResponse({ type: UnauthorizedRequestDto })
   @HttpCode(HttpStatus.OK)
   @Get()
-  findAll() {
-    return this.scheduleService.findAll();
+  findAll(@GetUser() user: UserPayload) {
+    return this.scheduleService.findAll({ user });
   }
 
   @ApiResponse({ type: ScheduleResponseDTO })
@@ -79,7 +79,8 @@ export class ScheduleController {
       const response = await this.scheduleService.findOne(+id);
       return ScheduleResponseDTO.factory(response);
     } catch (error) {
-      throw new BadRequestException(error);
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.PRECONDITION_FAILED);
     }
   }
 
@@ -98,7 +99,8 @@ export class ScheduleController {
       );
       return ScheduleResponseDTO.factory(response);
     } catch (error) {
-      throw new BadRequestException(error);
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.PRECONDITION_FAILED);
     }
   }
 
@@ -110,7 +112,8 @@ export class ScheduleController {
     try {
       return this.scheduleService.remove(+id);
     } catch (error) {
-      throw new BadRequestException(error);
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.BAD_REQUEST);
     }
   }
 

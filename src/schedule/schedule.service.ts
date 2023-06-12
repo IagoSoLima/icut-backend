@@ -4,17 +4,21 @@ import { AppLogger } from '~/app.logger';
 import {
   DEFAULT_HOUR_START,
   DEFAULT_JOIN_ARRAY_ERRORS,
+  DEFAULT_LIMIT_HOUR_TO_DO_ACTION_IN_SCHEDULE,
   DEFAULT_MINUTE_INCREMENT,
   DEFAULT_QUANTITY_HOURS_PER_DAY
 } from '~/app.vars';
 import { UserType } from '~/common/enum';
 import { UnexpectedError } from '~/common/errors';
+import { UserPayload } from '~/common/interfaces';
 import { DateUtil } from '~/common/utils';
 import { EmployeesRepository } from '~/employees/employees.repository';
+import { EstablishmentsRepository } from '~/establishments/establishments.repository';
 import { AvailableHoursInDayResponseDTO } from '~/schedule/dto/response';
 import {
   AvailableHoursInDayStrategy,
-  AvailableHoursStrategy
+  AvailableHoursStrategy,
+  CheckHoursToDoActionStrategy
 } from '~/schedule/strategies';
 import { ServicesRepository } from '~/services/services.repository';
 import { CreateScheduleParamsDTO } from './dto';
@@ -24,17 +28,20 @@ import { ScheduleRepository } from './schedule.repository';
 export class ScheduleService {
   private availableHoursInDayStrategy: AvailableHoursInDayStrategy;
   private availableHoursStrategy: AvailableHoursStrategy;
+  private checkHoursToDoActionStrategy: CheckHoursToDoActionStrategy;
   private messageError: string[];
 
   constructor(
     private readonly scheduleRepository: ScheduleRepository,
     private readonly servicesRepository: ServicesRepository,
     private readonly employeeRepository: EmployeesRepository,
+    private readonly establishmentRepository: EstablishmentsRepository,
     private readonly logger: AppLogger
   ) {
     this.logger.setContext(ScheduleService.name);
     this.availableHoursInDayStrategy = new AvailableHoursInDayStrategy(this);
     this.availableHoursStrategy = new AvailableHoursStrategy();
+    this.checkHoursToDoActionStrategy = new CheckHoursToDoActionStrategy();
     this.messageError = [];
   }
 
@@ -51,6 +58,17 @@ export class ScheduleService {
     if (user.userType === UserType.EMPLOYEE) {
       const errorLoggerMessage = 'Employee can not create schedule';
       const errorMessage = 'EMPLOYEE_CANT_CREATE';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+
+      this.messageError.push(errorMessage);
+    }
+
+    if (user.userType === UserType.ADMIN) {
+      const errorLoggerMessage = 'Admin can not create schedule';
+      const errorMessage = 'ADMIN_CANT_CREATE';
       this.logger.fail({
         category: 'SCHEDULE_SERVICE_ERROR',
         error: errorLoggerMessage
@@ -176,8 +194,36 @@ export class ScheduleService {
     });
   }
 
-  findAll() {
-    return this.scheduleRepository.findAll({});
+  async findAll(params: { user: UserPayload }) {
+    const { user } = params;
+    if (user.userType === UserType.EMPLOYEE) {
+      return this.scheduleRepository.findAll({
+        where: {
+          fk_id_employee: user.id
+        }
+      });
+    }
+
+    if (user.userType === UserType.CLIENT) {
+      return this.scheduleRepository.findAll({
+        where: {
+          fk_id_user: user.id
+        }
+      });
+    }
+
+    const establishment =
+      await this.establishmentRepository.findEstablishmentByAdmId({
+        where: {
+          id_user_administrator: user.id
+        }
+      });
+
+    return this.scheduleRepository.findAll({
+      where: {
+        fk_id_establishment: establishment.id_establishment
+      }
+    });
   }
 
   findOne(id: number) {
@@ -190,8 +236,59 @@ export class ScheduleService {
     return `This action updates a #${id} schedule`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} schedule`;
+  async remove(id: number) {
+    const appointment = await this.scheduleRepository.findOne({
+      id_schedules: id
+    });
+
+    if (!appointment) {
+      const errorLoggerMessage = 'Schedule not found';
+      const errorMessage = 'SCHEDULE_NOT_FOUND';
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      this.messageError.push(errorMessage);
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new Error(messageError);
+    }
+
+    const errorCheckHoursToDoActionStrategy =
+      this.checkHoursToDoActionStrategy.validate(
+        {
+          date: appointment.dt_schedule_initial
+        },
+        []
+      );
+
+    const isTwoOrMoreHoursBeforeAppointment =
+      errorCheckHoursToDoActionStrategy.length > 0;
+
+    if (!isTwoOrMoreHoursBeforeAppointment) {
+      const errorLoggerMessage = 'Schedule not found';
+
+      const errorMessage = `EXECUTE_ACTION_BEFORE_${DEFAULT_LIMIT_HOUR_TO_DO_ACTION_IN_SCHEDULE}_HOURS`;
+      this.logger.fail({
+        category: 'SCHEDULE_SERVICE_ERROR',
+        error: errorLoggerMessage
+      });
+      this.messageError.push(errorMessage);
+    }
+
+    if (this.messageError.length > 0) {
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new UnexpectedError(messageError);
+    }
+
+    await this.scheduleRepository.delete({
+      id_schedules: id
+    });
+
+    return;
   }
 
   availableHoursInDay(params: {

@@ -50,4 +50,8 @@ export class ScheduleRepository {
       data
     });
   }
+
+  async delete(where: Prisma.SchedulesWhereUniqueInput): Promise<Schedules> {
+    return this.prismaService.schedules.delete({ where });
+  }
 }

@@ -128,6 +128,7 @@ CREATE TABLE "Schedules" (
     "fk_id_user" INTEGER,
     "fk_id_establishment_payment" INTEGER,
     "fk_id_establishment" INTEGER,
+    "fk_id_employee" INTEGER,
     "status" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "update_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -186,3 +187,6 @@ ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_establishment_payment_fk
 
 -- AddForeignKey
 ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Schedules" ADD CONSTRAINT "Schedules_fk_id_employee_fkey" FOREIGN KEY ("fk_id_employee") REFERENCES "Employees"("id_employees") ON DELETE SET NULL ON UPDATE CASCADE;

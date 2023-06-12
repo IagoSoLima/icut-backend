@@ -5,13 +5,16 @@ import { EstablishmentsRepository } from '~/establishments/establishments.reposi
 import { EstablishmentsController } from './establishments.controller';
 import { EstablishmentsService } from './establishments.service';
 
+const dependencies = [
+  EstablishmentsService,
+  EstablishmentsRepository,
+  PrismaService,
+  ValidatorService
+];
+
 @Module({
   controllers: [EstablishmentsController],
-  providers: [
-    EstablishmentsService,
-    EstablishmentsRepository,
-    PrismaService,
-    ValidatorService
-  ]
+  providers: dependencies,
+  exports: dependencies
 })
 export class EstablishmentsModule {}
