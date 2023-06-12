@@ -11,7 +11,10 @@ import { UserType } from '~/common/enum';
 import { UnexpectedError } from '~/common/errors';
 import { DateUtil } from '~/common/utils';
 import { AvailableHoursInDayResponseDTO } from '~/schedule/dto/response';
-import { AvailableHoursInDayStrategy } from '~/schedule/strategies/available-hours-in-day.stratgey';
+import {
+  AvailableHoursInDayStrategy,
+  AvailableHoursStrategy
+} from '~/schedule/strategies';
 import { ServicesRepository } from '~/services/services.repository';
 import { CreateScheduleParamsDTO } from './dto';
 import { ScheduleRepository } from './schedule.repository';
@@ -19,6 +22,7 @@ import { ScheduleRepository } from './schedule.repository';
 @Injectable()
 export class ScheduleService {
   private availableHoursInDayStrategy: AvailableHoursInDayStrategy;
+  private availableHoursStrategy: AvailableHoursStrategy;
   private messageError: string[];
 
   constructor(
@@ -28,6 +32,7 @@ export class ScheduleService {
   ) {
     this.logger.setContext(ScheduleService.name);
     this.availableHoursInDayStrategy = new AvailableHoursInDayStrategy(this);
+    this.availableHoursStrategy = new AvailableHoursStrategy();
     this.messageError = [];
   }
 
@@ -43,7 +48,6 @@ export class ScheduleService {
       });
 
       this.messageError.push(errorMessage);
-      // throw new UnexpectedError(errorMessage);
     }
 
     const service = await this.servicesRepository.findOne({
@@ -58,8 +62,6 @@ export class ScheduleService {
         error: errorLoggerMessage
       });
       this.messageError.push(errorMessage);
-
-      // throw new UnexpectedError(errorMessage);
     }
 
     const dateIsPast = DateUtil.isPast(dateStart);
@@ -73,8 +75,6 @@ export class ScheduleService {
       });
 
       this.messageError.push(errorMessage);
-
-      // throw new UnexpectedError(errorMessage);
     }
 
     const [hour, minutes, seconds] = service.time_duration.split(':');
@@ -123,7 +123,8 @@ export class ScheduleService {
           year: dateStart.getFullYear(),
           startHour: DEFAULT_HOUR_START,
           endDate,
-          startDate: dateStart
+          startDate: dateStart,
+          intervalMinutes: DEFAULT_MINUTE_INCREMENT
         },
         []
       );
@@ -138,14 +139,13 @@ export class ScheduleService {
         error: errorLoggerMessage
       });
       this.messageError.push(errorMessage);
-
-      // throw new UnexpectedError(errorMessage);
     }
 
     if (this.messageError.length > 0) {
-      throw new UnexpectedError(
-        this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS)
-      );
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new UnexpectedError(messageError);
     }
 
     return await this.scheduleRepository.create({
@@ -215,13 +215,19 @@ export class ScheduleService {
           const endMinutes = appointment =>
             DateUtil.getMinutes(appointment.dt_schedule_end);
 
-          return (
-            (startHour(appointment) === hour &&
-              startMinutes(appointment) === minutes) ||
-            (endHour(appointment) === hour &&
-              endMinutes(appointment) === minutes) ||
-            (startHour(appointment) <= hour && endHour(appointment) >= hour)
+          const available = this.availableHoursStrategy.validate(
+            {
+              endHour: endHour(appointment),
+              endMinutes: endMinutes(appointment),
+              startHour: startHour(appointment),
+              startMinutes: startMinutes(appointment),
+              hour,
+              minutes
+            },
+            []
           );
+
+          return available.length <= 0;
         });
 
         const compareDate = new Date(year, month - 1, day, hour, minutes);
