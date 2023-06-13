@@ -4,12 +4,12 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateServiceDto {
   @ApiProperty({
-    name: 'descriptionService',
+    name: 'description_service',
     example: 'Corte de cabelo completo',
     required: true,
     type: String
   })
-  @Expose({ name: 'descriptionService' })
+  @Expose({ name: 'description_service' })
   @Type(() => String)
   @IsNotEmpty({
     message: 'Por favor forneça a descrição para o corte de cabelo'
