@@ -25,7 +25,8 @@ import { UsersModule } from './users/users.module';
     ScheduleModule,
     EstablishmentsModule,
     ServicesModule,
-    EmployeesModule
+    EmployeesModule,
+    ServicesModule
   ],
   providers: [
     {

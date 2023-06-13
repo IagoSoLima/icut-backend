@@ -36,11 +36,12 @@ export class UsersController extends BaseController {
   @Post()
   @Public()
   async create(@Body() createUserDto: CreateUserDto) {
-    const response = await this.usersService.create(createUserDto);
-    if (Array.isArray(response))
-      return new HttpException(response, HttpStatus.PRECONDITION_FAILED);
-
-    return response;
+    try {
+      return await this.usersService.create(createUserDto);
+    } catch (error) {
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.PRECONDITION_FAILED);
+    }
   }
 
   @Get()
@@ -64,7 +65,12 @@ export class UsersController extends BaseController {
   @Patch(':id')
   @Public()
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    try {
+      return this.usersService.update(+id, updateUserDto);
+    } catch (error) {
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.PRECONDITION_FAILED);
+    }
   }
 
   @Delete(':id')

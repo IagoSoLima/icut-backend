@@ -15,6 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
 import { GetUser } from '~/common/decorators';
+import { UnexpectedError } from '~/common/errors';
 import { UserPayload } from '~/common/interfaces';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
@@ -38,6 +39,15 @@ export class EstablishmentsController {
   @Get('/adm/:id')
   findByAdmId(@Param('id') id: string) {
     return this.establishmentsService.findEstablishmentByAdmId(+id);
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    try {
+      return this.establishmentsService.findEstablishmentById(+id);
+    } catch (err) {
+      throw new UnexpectedError(err);
+    }
   }
 
   @Get('/relation/:id')
