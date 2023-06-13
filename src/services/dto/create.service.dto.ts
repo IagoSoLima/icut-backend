@@ -40,7 +40,7 @@ export class CreateServiceDto {
   @IsNotEmpty({
     message: 'Por favor forneça o tempo de duração do serviço'
   })
-  timeDurantion?: string;
+  timeDuration?: string;
 
   @ApiProperty({
     name: 'id_establishment',

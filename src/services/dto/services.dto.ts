@@ -13,7 +13,7 @@ export class ServicesDto {
   valor?: number;
 
   @ApiProperty()
-  timeDurantion?: Date;
+  timeDuration?: Date;
 
   @ApiProperty()
   idEstablishment?: number;
@@ -29,7 +29,7 @@ export class ServicesDto {
       id: data.id_service,
       descriptionService: data.ds_service,
       valor: data.nr_valor,
-      timeDurantion: data.time_duration,
+      timeDuration: data.time_duration,
       idEstablishment: data.fk_id_establishment,
       typeService: data.fk_id_type_service,
       active: data.active

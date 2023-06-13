@@ -4,6 +4,7 @@ import { UnexpectedError } from '~/common/errors';
 import { PrismaService } from '~/common/prisma';
 import { CreateServiceDto } from '~/services/dto/create.service.dto';
 import { ServicesDto } from '~/services/dto/services.dto';
+import { UpdateServiceDto } from '~/services/dto/update.service.dto';
 import { ServicesRepository } from '~/services/services.repository';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class ServicesService {
       return await this.servicesRepository.create({
         ds_service: data.descriptionService,
         nr_valor: data.valor,
-        time_duration: data.timeDurantion,
+        time_duration: data.timeDuration,
         fk_id_establishment: data.idEstablishment,
         fk_id_type_service: data.typeService
       });
@@ -74,6 +75,28 @@ export class ServicesService {
       });
 
       throw new UnexpectedError(errorMessage);
+    }
+  }
+
+  async update(id: number, data: UpdateServiceDto) {
+    return this.servicesRepository.update({
+      where: {
+        id_service: id
+      },
+      data: {
+        ds_service: data.descriptionService,
+        nr_valor: data.valor,
+        time_duration: data.timeDuration,
+        fk_id_type_service: data.typeService
+      }
+    });
+  }
+
+  async delete(id: number) {
+    try {
+      return await this.servicesRepository.delete({ id_service: id });
+    } catch (error) {
+      throw new UnexpectedError(error);
     }
   }
 }

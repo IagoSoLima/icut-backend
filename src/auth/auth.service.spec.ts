@@ -119,7 +119,8 @@ describe('AuthService', () => {
         lastName: 'XXXXXXXXXXXXX',
         name: 'Teste',
         userName: 'teste',
-        userType: 1
+        userType: 1,
+        avatarUrl: ''
       });
       expect(signSpy).toHaveBeenCalled();
     });
@@ -136,7 +137,8 @@ describe('AuthService', () => {
         lastName: 'XXXXXXXXXXXXX',
         name: 'Teste',
         userName: 'XXXXX',
-        userType: 1
+        userType: 1,
+        avatarUrl: ''
       });
       expect(result).toHaveProperty('accessToken');
     });
@@ -155,7 +157,8 @@ describe('AuthService', () => {
         lastName: 'XXXXXXXXXXXXX',
         name: 'Teste',
         userName: 'XXXXX',
-        userType: 1
+        userType: 1,
+        avatarUrl: ''
       });
       expect(signSpy).toHaveBeenCalled();
     });
@@ -172,7 +175,8 @@ describe('AuthService', () => {
         lastName: 'XXXXXXXXXXXXX',
         name: 'Teste',
         userName: 'XXXXX',
-        userType: 1
+        userType: 1,
+        avatarUrl: ''
       });
       expect(token).toHaveProperty('accessToken');
     });
