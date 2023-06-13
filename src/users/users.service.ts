@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
 import { UserType } from '~/common/enum';
 import { UnexpectedError } from '~/common/errors';
 import { ValidatorService } from '~/common/validators';
@@ -29,7 +30,10 @@ export class UsersService {
     const hash = bcrypt.hashSync(createUserDto.password, 5);
     createUserDto.password = hash;
 
-    if (message.length > 0) return message;
+    if (message.length > 0) {
+      const messageError = message.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new UnexpectedError(messageError);
+    }
 
     switch (createUserDto.typeUser) {
       case UserType.CLIENT:
@@ -83,7 +87,6 @@ export class UsersService {
         where: { id_user: id },
         data: {
           ds_username: updateUserDto.username,
-          ds_password: updateUserDto.password,
           ds_email: updateUserDto.email,
           ds_user_name: updateUserDto.firstName,
           ds_user_lastname: updateUserDto.lastName,

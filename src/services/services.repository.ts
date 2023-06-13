@@ -6,6 +6,10 @@ import { PrismaService } from '~/common/prisma';
 export class ServicesRepository {
   constructor(private prismaService: PrismaService) {}
 
+  async create(data: Prisma.ServicesUncheckedCreateInput) {
+    return await this.prismaService.services.create({ data });
+  }
+
   async findAll(params: {
     where?: Prisma.ServicesWhereInput;
     include?: Prisma.ServicesInclude;
