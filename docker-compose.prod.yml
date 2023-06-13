@@ -16,3 +16,5 @@ services:
       - ${APP_PORT}:${APP_PORT}
     volumes:
       - .:/app
+      - /app/dist
+      - /app/node_modules
