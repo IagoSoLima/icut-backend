@@ -8,7 +8,7 @@ RUN npm install
 
 COPY ./ ./
 
-RUN sudo rm -rf dist
+RUN rm -rf dist
 
 RUN npm run prisma:db:push
 
