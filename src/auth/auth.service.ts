@@ -22,12 +22,13 @@ export class AuthService {
     const user = await this.usersRepository.getByEmail(email);
 
     if (user && PasswordEncrypty.passwordCompare(password, user.ds_password)) {
-      let result: UserPayload = {
+      const result: UserPayload = {
         id: user.id_user,
         email: user.ds_email,
         userName: user.ds_username,
         name: user.ds_user_name,
         lastName: user.ds_user_lastname,
+        avatarUrl: user.avatar_image,
         active: user.active,
         createdAt: user.created_at,
         updatedAt: user.update_at,

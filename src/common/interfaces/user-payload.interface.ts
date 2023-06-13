@@ -7,6 +7,7 @@ export interface UserPayload {
   email: string;
   userName: string;
   userType: UserType;
+  avatarUrl: string;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;

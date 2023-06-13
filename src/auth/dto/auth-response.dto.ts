@@ -104,6 +104,14 @@ export class AuthResponseDTO {
   deletedAt: Date | null;
 
   @ApiProperty({
+    name: 'avatar_url',
+    type: Boolean,
+    description: 'Imagem de avatar do usuário',
+    example: true
+  })
+  avatarUrl?: string | null;
+
+  @ApiProperty({
     name: 'active',
     type: Boolean,
     description: 'Status do usuário',
@@ -122,6 +130,7 @@ export class AuthResponseDTO {
       name: data.name,
       userLastName: data.lastName,
       userType: data.userType,
+      avatarUrl: data.avatarUrl,
       createdAt: data.createdAt,
       updateAt: data.updatedAt,
       deletedAt: data.deletedAt,
