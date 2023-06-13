@@ -7,12 +7,18 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post
+  Post,
+  UploadedFile,
+  UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AppLogger } from '~/app.logger';
+import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
 import { BaseController } from '~/common/controllers';
-import { Public } from '~/common/decorators';
+import { GetUser, Public } from '~/common/decorators';
+import { UserPayload } from '~/common/interfaces';
+import { UserDto } from '~/users/dto';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { UsersService } from './users.service';
@@ -64,5 +70,35 @@ export class UsersController extends BaseController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  })
+  @Post('avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  async avatar(
+    @GetUser() user: UserPayload,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    try {
+      const response = await this.usersService.uploadAvatar({
+        user,
+        file
+      });
+      return UserDto.factory(response);
+    } catch (error) {
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.BAD_REQUEST);
+    }
   }
 }

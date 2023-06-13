@@ -29,6 +29,9 @@ export class UserDto {
   typeUser?: number;
 
   @ApiProperty()
+  avatarImage?: string;
+
+  @ApiProperty()
   listTelephones?: Array<UserTelephoneDto>;
 
   static factoryUserTelephone(data: Users & { telephone: Telephones[] }) {
@@ -55,9 +58,25 @@ export class UserDto {
       lastName: data.ds_user_lastname,
       cpf: data.nr_cpf,
       typeUser: data.fk_id_type_user,
+      avatarImage: data.avatar_image,
       listTelephones: data.telephone.map(telefone => {
         return UserTelephoneDto.factory(telefone);
       })
+    };
+
+    return snakeKeys(formatedData);
+  }
+
+  static factory(data: Users) {
+    const formatedData = {
+      id: data.id_user,
+      username: data.ds_username,
+      email: data.ds_email,
+      firstName: data.ds_user_name,
+      lastName: data.ds_user_lastname,
+      cpf: data.nr_cpf,
+      typeUser: data.fk_id_type_user,
+      avatarImage: data.avatar_image
     };
 
     return snakeKeys(formatedData);

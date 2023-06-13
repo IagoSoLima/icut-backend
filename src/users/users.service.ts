@@ -1,6 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { Users } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
+import { AppLogger } from '~/app.logger';
+import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
 import { UserType } from '~/common/enum';
+import { UnexpectedError } from '~/common/errors';
+import { UserPayload } from '~/common/interfaces';
+import { S3AwsProvider } from '~/common/providers';
+import { ImageTypeStrategy } from '~/common/strategy';
 import { ValidatorService } from '~/common/validators';
 import { EmployeesService } from '~/employees/employees.service';
 import { EstablishmentsService } from '~/establishments/establishments.service';
@@ -14,17 +22,24 @@ import { CpfStrategy } from './strategies';
 import { UsersRepository } from './users.repository';
 @Injectable()
 export class UsersService {
+  private messageError: string[];
+
   constructor(
     private validatorField: ValidatorService,
     private userRepository: UsersRepository,
     private establishmentsService: EstablishmentsService,
     private telephoneService: TelephoneService,
-    private employeeService: EmployeesService
-  ) {}
+    private employeeService: EmployeesService,
+    private logger: AppLogger
+  ) {
+    this.messageError = [];
+  }
   private cpfStrategy = new CpfStrategy();
+  private imageTypeStrategy = new ImageTypeStrategy(this.logger);
+  private AwsS3Provider = new S3AwsProvider();
 
   async create(createUserDto: CreateUserDto) {
-    var message = await this.validadeUser(createUserDto, new Array<string>());
+    const message = await this.validadeUser(createUserDto, new Array<string>());
     const hash = bcrypt.hashSync(createUserDto.password, 5);
     createUserDto.password = hash;
 
@@ -120,5 +135,44 @@ export class UsersService {
     }
 
     return message;
+  }
+
+  async uploadAvatar(params: {
+    file: Express.Multer.File;
+    user: UserPayload;
+  }): Promise<Users> {
+    const { file, user } = params;
+
+    const imageTypeStrategyError = this.imageTypeStrategy.validate(
+      { file },
+      []
+    );
+    if (imageTypeStrategyError.length > 0) {
+      this.messageError.push(...imageTypeStrategyError);
+    }
+
+    if (this.messageError.length > 0) {
+      const messageError = this.messageError.join(DEFAULT_JOIN_ARRAY_ERRORS);
+      this.messageError = [];
+
+      throw new UnexpectedError(messageError);
+    }
+
+    const fileExtension = '.' + file.originalname.split('.')[1];
+    const fileType = file.mimetype.split('/')[1];
+    const fileName = crypto.randomUUID() + fileExtension;
+    const KEY = `users/avatar/${user.id}/${fileName}`;
+    const url = await this.AwsS3Provider.uploadFile(KEY, file.buffer, fileType);
+
+    const userUpdated = await this.userRepository.update({
+      data: {
+        avatar_image: url
+      },
+      where: {
+        id_user: user.id
+      }
+    });
+
+    return userUpdated;
   }
 }

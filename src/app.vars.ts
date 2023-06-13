@@ -36,3 +36,12 @@ export const DEFAULT_HOUR_START = 8;
 export const DEFAULT_QUANTITY_HOURS_PER_DAY = 10;
 export const DEFAULT_MINUTE_INCREMENT = 30;
 export const DEFAULT_LIMIT_HOUR_TO_DO_ACTION_IN_SCHEDULE = 2;
+
+export const AWS_REGION = configService.get<string>('AWS_REGION');
+export const AWS_ACCESS_KEY_ID = configService.get<string>('AWS_ACCESS_KEY_ID');
+export const AWS_SECRET_ACCESS_KEY = configService.get<string>(
+  'AWS_SECRET_ACCESS_KEY'
+);
+export const AWS_S3_BUCKET_NAME =
+  configService.get<string>('AWS_S3_BUCKET_NAME');
+export const AWS_S3_BUCKET_URL = configService.get<string>('AWS_S3_BUCKET_URL');
