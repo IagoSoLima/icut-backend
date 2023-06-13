@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AppLogger } from '~/app.logger';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
 import { EstablishmentsRepository } from '~/establishments/establishments.repository';
@@ -9,7 +10,8 @@ const dependencies = [
   EstablishmentsService,
   EstablishmentsRepository,
   PrismaService,
-  ValidatorService
+  ValidatorService,
+  AppLogger
 ];
 
 @Module({

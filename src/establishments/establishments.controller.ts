@@ -3,11 +3,19 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
-  Post
+  Post,
+  UploadedFile,
+  UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
+import { GetUser } from '~/common/decorators';
+import { UserPayload } from '~/common/interfaces';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
 import { EstablishmentsService } from './establishments.service';
@@ -48,5 +56,39 @@ export class EstablishmentsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.establishmentsService.remove(+id);
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  })
+  @Post('logo/:id')
+  @UseInterceptors(FileInterceptor('file'))
+  async avatar(
+    @GetUser() user: UserPayload,
+    @Param('id') id: number,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    try {
+      const response = await this.establishmentsService.uploadLogo({
+        id,
+        user,
+        file
+      });
+
+      return response;
+      // return UserDto.factory(response);
+    } catch (error) {
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.BAD_REQUEST);
+    }
   }
 }
