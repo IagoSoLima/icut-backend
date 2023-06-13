@@ -17,19 +17,6 @@ export class UpdateUserDto {
   username: string;
 
   @ApiProperty({
-    name: 'password',
-    example: 'SuaS3nha',
-    required: true,
-    type: String
-  })
-  @Expose({ name: 'password' })
-  @Type(() => String)
-  @IsNotEmpty({
-    message: 'Por favor fornece a senha para o usuario'
-  })
-  password: string;
-
-  @ApiProperty({
     name: 'email',
     example: 'teste@teste.com.br',
     required: true,
