@@ -43,11 +43,21 @@ export class EstablishmentsService {
 
   async findAll() {
     const listEstablishment = await this.establishmentsRepository.findAll({
-      include: { address: true }
+      where: {
+        service: {
+          some: {}
+        }
+      },
+      include: {
+        address: true
+      }
     });
     const listEstablishmentDto = listEstablishment.map(
-      (establishment: Establishments & { address: Addresses[] }) =>
-        EstablishmentsDto.factory(establishment)
+      (
+        establishment: Establishments & {
+          address: Addresses[];
+        }
+      ) => EstablishmentsDto.factory(establishment)
     );
     return listEstablishmentDto;
   }
