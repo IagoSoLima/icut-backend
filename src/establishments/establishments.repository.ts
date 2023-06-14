@@ -7,7 +7,9 @@ export class EstablishmentsRepository {
   constructor(private prismaService: PrismaService) {}
 
   async createEstablishment(data: Prisma.EstablishmentsUncheckedCreateInput) {
-    return await this.prismaService.establishments.create({ data });
+    return await this.prismaService.establishments.create({
+      data
+    });
   }
 
   async findAll(params: {
@@ -16,6 +18,7 @@ export class EstablishmentsRepository {
   }) {
     const { where, include } = params;
     return await this.prismaService.establishments.findMany({
+      where,
       include
     });
   }
