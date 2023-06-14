@@ -9,7 +9,7 @@ export class EmployeesService {
   constructor(private employeesRepository: EmployeesRepository) {}
 
   async create(createEmployeeDto: CreateEmployeeDto) {
-    await this.employeesRepository.createEmployee({
+    return await this.employeesRepository.createEmployee({
       fk_id_user: createEmployeeDto.idUser,
       fk_id_establishment: createEmployeeDto.idEstablishment
     });

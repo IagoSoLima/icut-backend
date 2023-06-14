@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { AddressesRepository } from '~/addresses/addresses.repository';
+import { AddressesService } from '~/addresses/addresses.service';
 import { AppLogger } from '~/app.logger';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
@@ -22,6 +24,8 @@ const dependencies = [
   TelephoneRepository,
   EmployeesService,
   EmployeesRepository,
+  AddressesService,
+  AddressesRepository,
   AppLogger
 ];
 

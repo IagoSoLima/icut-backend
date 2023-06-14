@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Users } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
+import { AddressesService } from '~/addresses/addresses.service';
 import { AppLogger } from '~/app.logger';
 import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
 import { UserType } from '~/common/enum';
@@ -30,6 +31,7 @@ export class UsersService {
     private establishmentsService: EstablishmentsService,
     private telephoneService: TelephoneService,
     private employeeService: EmployeesService,
+    private addressesService: AddressesService,
     private logger: AppLogger
   ) {
     this.messageError = [];
@@ -39,38 +41,53 @@ export class UsersService {
   private AwsS3Provider = new S3AwsProvider();
 
   async create(createUserDto: CreateUserDto) {
-    const message = await this.validadeUser(createUserDto, new Array<string>());
-    const hash = bcrypt.hashSync(createUserDto.password, 5);
-    createUserDto.password = hash;
+    try {
+      const message = await this.validadeUser(
+        createUserDto,
+        new Array<string>()
+      );
+      const hash = bcrypt.hashSync(createUserDto.password, 5);
+      createUserDto.password = hash;
 
-    if (message.length > 0) {
-      const messageError = message.join(DEFAULT_JOIN_ARRAY_ERRORS);
-      throw new UnexpectedError(messageError);
-    }
+      if (message.length > 0) {
+        const messageError = message.join(DEFAULT_JOIN_ARRAY_ERRORS);
+        throw new UnexpectedError(messageError);
+      }
 
-    switch (createUserDto.typeUser) {
-      case UserType.CLIENT:
-        return await this.userRepository.create(
-          CreateCommonUser.createCommonUserDto(createUserDto)
-        );
+      switch (createUserDto.typeUser) {
+        case UserType.CLIENT:
+          return await this.userRepository.create(
+            CreateCommonUser.createCommonUserDto(createUserDto)
+          );
 
-      case UserType.ADMIN:
-        const employee = await this.userRepository.createAdm(
-          CreateAdmUser.createAdmUserDto(createUserDto)
-        );
-        return this.employeeService.create({
-          idEstablishment: employee.establishment[0].id_establishment,
-          idUser: employee.id_user
-        });
+        case UserType.ADMIN:
+          const employee = await this.userRepository.createAdm(
+            CreateAdmUser.createAdmUserDto(createUserDto)
+          );
+          await this.employeeService.create({
+            idEstablishment: employee.establishment[0].id_establishment,
+            idUser: employee.id_user
+          });
+          await this.addressesService.create({
+            address: createUserDto.address.address,
+            cep: createUserDto.address.cep,
+            city: createUserDto.address.city,
+            state: createUserDto.address.state,
+            idEstablishment: employee.establishment[0].id_establishment
+          });
+          break;
 
-      case UserType.EMPLOYEE:
-        return await this.userRepository.create(
-          CreateEmployeeUser.createEmployeeUserDto(createUserDto)
-        );
+        case UserType.EMPLOYEE:
+          return await this.userRepository.create(
+            CreateEmployeeUser.createEmployeeUserDto(createUserDto)
+          );
 
-      default:
-        message.push('Nao houve atribuição de tipo do usuario');
-        return message;
+        default:
+          message.push('Nao houve atribuição de tipo do usuario');
+          return message;
+      }
+    } catch (error) {
+      throw new UnexpectedError(error);
     }
   }
 

@@ -13,10 +13,9 @@ export class EstablishmentsRepository {
   async findAll(params: {
     where?: Prisma.EstablishmentsWhereInput;
     include?: Prisma.EstablishmentsInclude;
-  }): Promise<Establishments[] | []> {
+  }) {
     const { where, include } = params;
     return await this.prismaService.establishments.findMany({
-      where,
       include
     });
   }
@@ -33,17 +32,26 @@ export class EstablishmentsRepository {
     });
   }
 
-  async findEstablishmentByAdmId(
-    data: Prisma.EstablishmentsFindFirstArgs
-  ): Promise<Establishments | null> {
-    return await this.prismaService.establishments.findFirst(data);
+  async findEstablishmentByAdmId(params: {
+    where?: Prisma.EstablishmentsWhereInput;
+    include?: Prisma.EstablishmentsInclude;
+  }) {
+    const { where, include } = params;
+    return await this.prismaService.establishments.findFirst({
+      where,
+      include
+    });
   }
 
-  async findEstablishmentById(
-    data: Prisma.EstablishmentsWhereUniqueInput
-  ): Promise<Establishments | null> {
+  async findEstablishmentById(params: {
+    where?: Prisma.EstablishmentsWhereUniqueInput;
+  }) {
+    const { where } = params;
     return await this.prismaService.establishments.findUnique({
-      where: data
+      where,
+      include: {
+        address: true
+      }
     });
   }
 
