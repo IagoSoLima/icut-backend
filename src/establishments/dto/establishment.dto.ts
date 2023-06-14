@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Establishments } from '@prisma/client';
+import { Addresses, Establishments } from '@prisma/client';
 import { Expose, Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
+import { AddressDto } from '~/addresses/dto/address.dto';
 import { snakeKeys } from '~/common/utils';
 
 export class EstablishmentsDto {
@@ -89,7 +90,16 @@ export class EstablishmentsDto {
   @Expose({ name: 'id_user' })
   idAdm?: number;
 
-  static factory(data: Establishments) {
+  @ApiProperty({
+    name: 'address',
+    example: 1,
+    required: true,
+    type: AddressDto
+  })
+  @Expose({ name: 'address' })
+  address?: AddressDto;
+
+  static factory(data: Establishments & { address?: Addresses[] }) {
     var formateddata = {
       id: data.id_establishment,
       corporateName: data.ds_corporate_name,
@@ -97,7 +107,8 @@ export class EstablishmentsDto {
       cnpj: data.nr_cnpj,
       emailEstablishment: data.ds_email,
       logo: data.establishment_logo,
-      idAdm: data.id_user_administrator
+      idAdm: data.id_user_administrator,
+      address: AddressDto.factory(data.address[0])
     };
     return snakeKeys(formateddata);
   }
