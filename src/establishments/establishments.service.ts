@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Establishments } from '@prisma/client';
+import { Addresses, Establishments } from '@prisma/client';
 import * as crypto from 'crypto';
 import { AppLogger } from '~/app.logger';
 import { DEFAULT_JOIN_ARRAY_ERRORS } from '~/app.vars';
@@ -42,10 +42,22 @@ export class EstablishmentsService {
   }
 
   async findAll() {
-    const listEstablishment = await this.establishmentsRepository.findAll({});
+    const listEstablishment = await this.establishmentsRepository.findAll({
+      where: {
+        service: {
+          some: {}
+        }
+      },
+      include: {
+        address: true
+      }
+    });
     const listEstablishmentDto = listEstablishment.map(
-      (establishment: Establishments) =>
-        EstablishmentsDto.factory(establishment)
+      (
+        establishment: Establishments & {
+          address: Addresses[];
+        }
+      ) => EstablishmentsDto.factory(establishment)
     );
     return listEstablishmentDto;
   }
@@ -61,6 +73,9 @@ export class EstablishmentsService {
       await this.establishmentsRepository.findEstablishmentByAdmId({
         where: {
           id_user_administrator: id
+        },
+        include: {
+          address: true
         }
       });
     if (establishment === null) {
@@ -72,7 +87,7 @@ export class EstablishmentsService {
   async findEstablishmentById(id: number) {
     const establishment =
       await this.establishmentsRepository.findEstablishmentById({
-        id_establishment: id
+        where: { id_establishment: id }
       });
     if (establishment === null) {
       throw new UnexpectedError('Nao retornou nenhum estabelecimento');
@@ -81,7 +96,6 @@ export class EstablishmentsService {
   }
 
   async update(id: number, updateEstablishmentDto: UpdateEstablishmentDto) {
-    console.log(updateEstablishmentDto);
     return await this.establishmentsRepository.update({
       where: { id_establishment: id },
       data: {

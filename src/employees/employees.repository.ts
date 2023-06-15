@@ -7,9 +7,11 @@ import { PrismaService } from '~/common/prisma';
 export class EmployeesRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async createEmployee(data: Prisma.EmployeesUncheckedCreateInput) {
+  async createEmployee(
+    data: Prisma.EmployeesUncheckedCreateInput
+  ): Promise<Employees> {
     try {
-      await this.prismaService.employees.create({ data });
+      return await this.prismaService.employees.create({ data });
     } catch (err) {
       throw new UnexpectedError(err);
     }

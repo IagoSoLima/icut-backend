@@ -81,6 +81,20 @@ model Establishments {
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
+  address                        Addresses[]
+}
+
+model Addresses{
+  id_address                     Int @default(autoincrement()) @id
+  ds_address                     String
+  ds_city                        String
+  ds_state                       String
+  nr_cep                         String
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: Cascade, onUpdate: Cascade)
+  fk_id_establishment            Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
 }
 
 model Establishment_payments {

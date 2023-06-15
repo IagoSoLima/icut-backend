@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
+import { CreateAddressDto } from '~/addresses/dto/create-address.dto';
 import { CreateEstablishmentDto } from '~/establishments/dto/create-establishment.dto';
 import { CreateTelephoneDto } from '~/telephones/dto/create-telephone.dto';
 
@@ -122,4 +123,12 @@ export class CreateUserDto {
   @Expose({ name: 'establishment' })
   @Type(() => CreateEstablishmentDto)
   establishment?: CreateEstablishmentDto;
+
+  @ApiProperty({
+    name: 'address',
+    required: true
+  })
+  @Expose({ name: 'address' })
+  @Type(() => CreateAddressDto)
+  address?: CreateAddressDto;
 }

@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { AddressesRepository } from '~/addresses/addresses.repository';
+import { AddressesService } from '~/addresses/addresses.service';
 import { AppLogger } from '~/app.logger';
 import { PrismaService } from '~/common/prisma';
 import { ValidatorService } from '~/common/validators';
@@ -41,6 +43,8 @@ describe('UsersService', () => {
         TelephoneRepository,
         EmployeesService,
         EmployeesRepository,
+        AddressesService,
+        AddressesRepository,
         AppLogger
       ]
     }).compile();

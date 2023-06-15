@@ -28,4 +28,16 @@ export class ServicesRepository {
       where: surveyWhereUniqueInput
     });
   }
+
+  async update(data: Prisma.ServicesUpdateArgs): Promise<Services | null> {
+    return await this.prismaService.services.update(data);
+  }
+
+  async delete(
+    data: Prisma.ServicesWhereUniqueInput
+  ): Promise<Services | null> {
+    return await this.prismaService.services.delete({
+      where: data
+    });
+  }
 }

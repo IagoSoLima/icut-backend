@@ -11,6 +11,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { ServicesModule } from './services/services.module';
 import { TelephonesModule } from './telephones/telephones.module';
 import { UsersModule } from './users/users.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { UsersModule } from './users/users.module';
     EstablishmentsModule,
     ServicesModule,
     EmployeesModule,
-    ServicesModule
+    ServicesModule,
+    AddressesModule
   ],
   providers: [
     {
