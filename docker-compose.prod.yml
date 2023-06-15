@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     container_name: ${APP_CONTAINER_NAME}_prod
-    command: npm run start:prod
+    command: npm run start
     tty: true
     ports:
       - ${APP_PORT}:${APP_PORT}

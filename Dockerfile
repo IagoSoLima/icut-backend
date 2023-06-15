@@ -9,12 +9,12 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-COPY ./package*.json ./
+COPY --chown=node:node ./package*.json ./
 
 RUN npm install
 
 RUN npm run prisma:db:push
 
-COPY ./ ./
+COPY --chown=node:node ./ ./
 
 CMD ["npm", "start:dev"]
