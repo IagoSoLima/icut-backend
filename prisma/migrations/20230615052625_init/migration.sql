@@ -71,6 +71,21 @@ CREATE TABLE "Establishments" (
 );
 
 -- CreateTable
+CREATE TABLE "Addresses" (
+    "id_address" SERIAL NOT NULL,
+    "ds_address" TEXT NOT NULL,
+    "ds_city" TEXT NOT NULL,
+    "ds_state" TEXT NOT NULL,
+    "nr_cep" TEXT NOT NULL,
+    "fk_id_establishment" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "update_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP(3),
+
+    CONSTRAINT "Addresses_pkey" PRIMARY KEY ("id_address")
+);
+
+-- CreateTable
 CREATE TABLE "Establishment_payments" (
     "id_establishment_payment" SERIAL NOT NULL,
     "fk_id_type_payment" INTEGER NOT NULL,
@@ -163,6 +178,9 @@ ALTER TABLE "Employees" ADD CONSTRAINT "Employees_fk_id_establishment_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "Establishments" ADD CONSTRAINT "Establishments_id_user_administrator_fkey" FOREIGN KEY ("id_user_administrator") REFERENCES "Users"("id_user") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Addresses" ADD CONSTRAINT "Addresses_fk_id_establishment_fkey" FOREIGN KEY ("fk_id_establishment") REFERENCES "Establishments"("id_establishment") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Establishment_payments" ADD CONSTRAINT "Establishment_payments_fk_id_type_payment_fkey" FOREIGN KEY ("fk_id_type_payment") REFERENCES "Type_payment"("id_type_payment") ON DELETE NO ACTION ON UPDATE CASCADE;

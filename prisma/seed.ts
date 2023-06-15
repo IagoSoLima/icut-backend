@@ -77,6 +77,16 @@ const createUserAdmin = async () => {
     }
   });
 
+  await prisma.addresses.create({
+    data: {
+      ds_address: 'Rua maringá',
+      ds_city: 'Itaquaquecetuba',
+      ds_state: 'SP',
+      nr_cep: '07070-000',
+      fk_id_establishment: establishment.id_establishment
+    }
+  });
+
   await prisma.establishment_payments.create({
     data: {
       fk_id_establishment: establishment.id_establishment,
@@ -122,23 +132,26 @@ const createServices = async (establishmentId: number) => {
 };
 
 const main = async () => {
-  await prisma.type_user.deleteMany({});
-  await prisma.type_user.createMany({
-    data: [
-      {
-        id_type_user: 1,
-        ds_type_user: 'Cliente'
-      },
-      {
-        id_type_user: 2,
-        ds_type_user: 'Administrador/Gerente'
-      },
-      {
-        id_type_user: 3,
-        ds_type_user: 'Funcionário'
-      }
-    ]
-  });
+  const usersType = await prisma.type_user.findMany();
+
+  if (usersType.length === 0) {
+    await prisma.type_user.createMany({
+      data: [
+        {
+          id_type_user: 1,
+          ds_type_user: 'Cliente'
+        },
+        {
+          id_type_user: 2,
+          ds_type_user: 'Administrador/Gerente'
+        },
+        {
+          id_type_user: 3,
+          ds_type_user: 'Funcionário'
+        }
+      ]
+    });
+  }
 
   await prisma.type_payment.deleteMany({});
   await prisma.type_payment.createMany({

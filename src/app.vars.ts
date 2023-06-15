@@ -48,3 +48,5 @@ export const AWS_S3_BUCKET_URL = configService.get<string>('AWS_S3_BUCKET_URL');
 
 export const DEFAULT_AVATAR_URL =
   'https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-avatar.jpg';
+export const DEFAULT_LOGO_URL =
+  'https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-barber-shop.jpg';

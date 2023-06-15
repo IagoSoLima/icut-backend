@@ -21,7 +21,7 @@ model Users {
   nr_cpf                         String @unique
   fk_id_type_user                Int @default(1)
   fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: NoAction, onUpdate: Cascade)
-  avatar_image                   String? 
+  avatar_image                   String @default("https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-avatar.jpg")
   created_at                     DateTime @default(now())
   update_at                      DateTime @updatedAt @default(now())
   deleted_at                     DateTime? @map("deleted_at")
@@ -70,7 +70,7 @@ model Establishments {
   ds_representative_name         String
   nr_cnpj                        String
   ds_email                       String
-  establishment_logo             String
+  establishment_logo             String @default("https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-barber-shop.jpg")
   fk_id_user                     Users @relation(fields: [id_user_administrator], references: [id_user], onDelete: Cascade, onUpdate: Cascade)
   id_user_administrator          Int
   active                         Boolean @default(true)
