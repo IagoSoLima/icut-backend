@@ -23,6 +23,11 @@ export class ScheduleRepository {
     return this.prismaService.schedules.findUnique({
       where: surveyWhereUniqueInput,
       include: {
+        fk_users: {
+          include: {
+            telephone: true
+          }
+        },
         fk_service: {
           include: {
             fk_type_service: true

@@ -261,6 +261,11 @@ export class ScheduleService {
         fk_id_establishment: establishment.id_establishment
       },
       include: {
+        fk_users: {
+          include: {
+            telephone: true
+          }
+        },
         fk_service: {
           include: {
             fk_type_service: true
