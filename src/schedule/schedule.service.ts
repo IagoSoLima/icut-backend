@@ -201,6 +201,24 @@ export class ScheduleService {
       return this.scheduleRepository.findAll({
         where: {
           fk_id_employee: user.id
+        },
+        include: {
+          fk_service: {
+            include: {
+              fk_type_service: true
+            }
+          },
+          fk_employee: {
+            include: {
+              fk_user: true
+            }
+          },
+          fk_establishment: true,
+          fk_establishment_payment: {
+            include: {
+              fk_type_payment: true
+            }
+          }
         }
       });
     }
@@ -209,6 +227,24 @@ export class ScheduleService {
       return this.scheduleRepository.findAll({
         where: {
           fk_id_user: user.id
+        },
+        include: {
+          fk_service: {
+            include: {
+              fk_type_service: true
+            }
+          },
+          fk_employee: {
+            include: {
+              fk_user: true
+            }
+          },
+          fk_establishment: true,
+          fk_establishment_payment: {
+            include: {
+              fk_type_payment: true
+            }
+          }
         }
       });
     }
@@ -223,6 +259,24 @@ export class ScheduleService {
     return this.scheduleRepository.findAll({
       where: {
         fk_id_establishment: establishment.id_establishment
+      },
+      include: {
+        fk_service: {
+          include: {
+            fk_type_service: true
+          }
+        },
+        fk_employee: {
+          include: {
+            fk_user: true
+          }
+        },
+        fk_establishment: true,
+        fk_establishment_payment: {
+          include: {
+            fk_type_payment: true
+          }
+        }
       }
     });
   }

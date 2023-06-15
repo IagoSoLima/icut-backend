@@ -45,3 +45,6 @@ export const AWS_SECRET_ACCESS_KEY = configService.get<string>(
 export const AWS_S3_BUCKET_NAME =
   configService.get<string>('AWS_S3_BUCKET_NAME');
 export const AWS_S3_BUCKET_URL = configService.get<string>('AWS_S3_BUCKET_URL');
+
+export const DEFAULT_AVATAR_URL =
+  'https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-avatar.jpg';

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { DEFAULT_AVATAR_URL } from '~/app.vars';
 import { snakeKeys } from '~/common/utils';
 import { SignInResponse } from './sign-in-response.dto';
 
@@ -130,7 +131,7 @@ export class AuthResponseDTO {
       name: data.name,
       userLastName: data.lastName,
       userType: data.userType,
-      avatarUrl: data.avatarUrl,
+      avatarUrl: data.avatarUrl || DEFAULT_AVATAR_URL,
       createdAt: data.createdAt,
       updateAt: data.updatedAt,
       deletedAt: data.deletedAt,

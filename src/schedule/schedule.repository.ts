@@ -21,7 +21,25 @@ export class ScheduleRepository {
     surveyWhereUniqueInput: Prisma.SchedulesWhereUniqueInput
   ): Promise<Schedules | null> {
     return this.prismaService.schedules.findUnique({
-      where: surveyWhereUniqueInput
+      where: surveyWhereUniqueInput,
+      include: {
+        fk_service: {
+          include: {
+            fk_type_service: true
+          }
+        },
+        fk_employee: {
+          include: {
+            fk_user: true
+          }
+        },
+        fk_establishment: true,
+        fk_establishment_payment: {
+          include: {
+            fk_type_payment: true
+          }
+        }
+      }
     });
   }
 
