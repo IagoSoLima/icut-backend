@@ -75,7 +75,7 @@ jobs:
           echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$INSTANCE_HOST" >> ~/.ssh/known_hosts
-          ssh -i PRIVATE_KEY ubuntu@INSTANCE_HOST 'cd /home/ubuntu/app && git pull && npm install && npm run build'
+          ssh -i ~/.ssh/id_rsa ubuntu@INSTANCE_HOST 'cd /home/ubuntu/app && git pull && npm install && npm run prisma:db:push && npm run build'
 
       - name: Restart application
         run: |
@@ -86,4 +86,4 @@ jobs:
           echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$INSTANCE_HOST" >> ~/.ssh/known_hosts
-          ssh -i PRIVATE_KEY ubuntu@INSTANCE_HOST 'pm2 restart app'
+          ssh -i ~/.ssh/id_rsa ubuntu@INSTANCE_HOST 'pm2 restart app'
