@@ -57,5 +57,6 @@ jobs:
           key: ${{ secrets.AWS_EC2_SSH_DEV }}
           script: |
             cd /home/ubuntu/app
+            git pull
             npm run prisma:db:push
             pm2 restart app
