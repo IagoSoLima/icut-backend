@@ -4,12 +4,12 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule
 } from '@nestjs/swagger';
-import { APP_VERSION, APP_VERSION_PREFIX } from '~/app.vars';
+import { APP_VERSION, APP_VERSION_PREFIX, IS_DEV, IS_PROD } from '~/app.vars';
 
 export const enableSwagger = (app: INestApplication, path = 'api') => {
   const swaggerDocumentBuilder = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('ICut - API')
+    .setTitle(`ICut - API ${IS_PROD ? 'PROD' : IS_DEV ? 'DEV' : 'TEST'}`)
     .setDescription('This is our API')
     .setVersion(`${APP_VERSION_PREFIX}.${APP_VERSION}`)
     .build();
