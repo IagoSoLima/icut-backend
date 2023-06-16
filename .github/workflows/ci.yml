@@ -1,4 +1,4 @@
-name: ci-api
+name: Continuos Integration
 on:
   workflow_dispatch:
   pull_request:
