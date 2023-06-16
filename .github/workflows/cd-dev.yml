@@ -37,9 +37,6 @@ jobs:
       - name: Test application
         run: npm run test
 
-      - name: Update Database
-        run: npm run prisma:db:push
-
       - name: Install SSH client
         run: sudo apt-get install -y openssh-client
 
@@ -60,4 +57,5 @@ jobs:
           key: ${{ secrets.AWS_EC2_SSH_DEV }}
           script: |
             cd /home/ubuntu/app
+            npm run prisma:db:push
             pm2 restart app
