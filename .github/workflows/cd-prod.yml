@@ -43,7 +43,7 @@ jobs:
       - name: Update files in EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: '54.207.235.172'
+          host: '15.228.15.194'
           username: 'ubuntu'
           key: ${{ secrets.AWS_EC2_SSH_PROD }}
           script: |
@@ -53,7 +53,7 @@ jobs:
       - name: Update Database
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: '54.207.235.172'
+          host: '15.228.15.194'
           username: 'ubuntu'
           key: ${{ secrets.AWS_EC2_SSH_PROD }}
           script: |
