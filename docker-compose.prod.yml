@@ -1,0 +1,20 @@
+version: '3.8'
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  app-node-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: ${APP_CONTAINER_NAME}_prod
+    command: npm run start
+    tty: true
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - .:/app
+      - /app/dist
+      - /app/node_modules

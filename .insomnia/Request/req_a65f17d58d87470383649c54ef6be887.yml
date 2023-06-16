@@ -1,0 +1,36 @@
+_id: req_a65f17d58d87470383649c54ef6be887
+type: Request
+parentId: fld_1f66e6dc6dbd48f392e19e4f4611df89
+modified: 1686513202353
+created: 1686513202353
+url: '{{ _.baseurl }}/v1/establishments/1'
+name: Update
+description: ''
+method: PATCH
+body:
+  mimeType: application/json
+  text: >-
+    {
+    	"corporateName": "Estabeleciomento nome teste",
+    	"representativeName": "Empresa Teste",
+    	"emailEstablishment": "teste-icut-company@tuamaeaquelaursa.com",
+    	"cnpj": "22222222222",
+    	"logo": "https://cdn.leroymerlin.com.br/products/kit_6_placas_decorativas_barbearia_barber_shop_salao_mdf_1567590343_992f_600x600.jpg",
+    	"idAdm": 2
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1686390057532
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

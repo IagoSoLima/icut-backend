@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id_user                        Int @default(autoincrement()) @id
+  ds_username                    String @unique
+  ds_password                    String
+  ds_email                       String @unique
+  ds_user_name                   String
+  ds_user_lastname               String
+  nr_cpf                         String @unique
+  fk_id_type_user                Int @default(1)
+  fk_type_user                   Type_user @relation(fields: [fk_id_type_user], references: [id_type_user], onDelete: NoAction, onUpdate: Cascade)
+  avatar_image                   String @default("https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-avatar.jpg")
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+  active                         Boolean @default(true)
+  employee                       Employees? 
+  telephone                      Telephones[]
+  schedule                       Schedules[]
+  establishment                  Establishments[]
+}
+
+model Type_user {
+  id_type_user                   Int @default(autoincrement()) @id
+  ds_type_user                   String
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+  user                           Users[]
+}
+
+model Telephones {
+  id_telephone                   Int @default(autoincrement()) @id
+  nr_telephone                   String
+  ds_telephone                   String
+  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user], onDelete:Cascade, onUpdate: Cascade )
+  fk_id_user                     Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+}
+
+model Employees {
+  id_employees                   Int @default(autoincrement()) @id
+  fk_user                        Users @relation(fields: [fk_id_user], references: [id_user], onDelete: Cascade, onUpdate: Cascade)
+  fk_id_user                     Int @unique
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete:Cascade, onUpdate: Cascade)
+  fk_id_establishment            Int
+  schedule                       Schedules[]
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+}
+
+model Establishments {
+  id_establishment               Int @default(autoincrement()) @id
+  ds_corporate_name              String
+  ds_representative_name         String
+  nr_cnpj                        String
+  ds_email                       String
+  establishment_logo             String @default("https://icut-bucket.s3.sa-east-1.amazonaws.com/public/default-barber-shop.jpg")
+  fk_id_user                     Users @relation(fields: [id_user_administrator], references: [id_user], onDelete: Cascade, onUpdate: Cascade)
+  id_user_administrator          Int
+  active                         Boolean @default(true)
+  employee                       Employees[]
+  establishment_payment          Establishment_payments[]
+  service                        Services[]
+  schedule                       Schedules[]
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+  address                        Addresses[]
+}
+
+model Addresses{
+  id_address                     Int @default(autoincrement()) @id
+  ds_address                     String
+  ds_city                        String
+  ds_state                       String
+  nr_cep                         String
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: Cascade, onUpdate: Cascade)
+  fk_id_establishment            Int
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+}
+
+model Establishment_payments {
+  id_establishment_payment       Int @default(autoincrement()) @id
+  fk_type_payment                Type_payment @relation(fields: [fk_id_type_payment], references: [id_type_payment], onDelete: NoAction, onUpdate: Cascade)
+  fk_id_type_payment             Int
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment])
+  fk_id_establishment            Int
+  schedule                       Schedules[]
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+}
+
+model Type_payment {
+  id_type_payment                Int @default(autoincrement()) @id
+  ds_type_payment                String
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+  establishment_payment          Establishment_payments[]
+
+}
+
+model Type_service {
+  id_type_service                Int @default(autoincrement()) @id
+  ds_type_service                String
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  service                        Services[]  
+}
+
+model Services {
+  id_service                     Int @default(autoincrement()) @id
+  ds_service                     String
+  nr_valor                       Float
+  time_duration                  String
+  fk_establishment               Establishments @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: NoAction, onUpdate: Cascade)
+  fk_id_establishment            Int
+  fk_type_service                Type_service @relation(fields: [fk_id_type_service], references: [id_type_service], onDelete: NoAction, onUpdate: Cascade)
+  fk_id_type_service             Int
+  schedule                       Schedules[]
+  active                         Boolean @default(true)
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+}
+
+model Schedules {
+  id_schedules                   Int @default(autoincrement()) @id
+  dt_schedule_initial            DateTime
+  dt_schedule_end                DateTime
+  fk_service                     Services? @relation(fields: [fk_id_service], references: [id_service], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_service                  Int?
+  fk_users                       Users? @relation(fields: [fk_id_user], references: [id_user], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_user                     Int?
+  fk_id_establishment_payment    Int?
+  fk_establishment_payment       Establishment_payments? @relation(fields: [fk_id_establishment_payment], references: [id_establishment_payment], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_establishment            Int?
+  fk_establishment               Establishments? @relation(fields: [fk_id_establishment], references: [id_establishment], onDelete: SetNull, onUpdate: Cascade)
+  fk_id_employee                 Int?
+  fk_employee                    Employees? @relation(fields: [fk_id_employee], references: [id_employees], onDelete: SetNull, onUpdate: Cascade)
+  status                         Int @default(1)
+  created_at                     DateTime @default(now())
+  update_at                      DateTime @updatedAt @default(now())
+  deleted_at                     DateTime? @map("deleted_at")
+}

@@ -1,0 +1,24 @@
+_id: req_eba31dc7160d4b36b4d4b5843e280639
+type: Request
+parentId: fld_139b497c1c734918a014d28936247dc5
+modified: 1686513227956
+created: 1686513227956
+url: '{{ _.baseurl }}/v1/users/111'
+name: FindbyId
+description: ''
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1685061105167
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

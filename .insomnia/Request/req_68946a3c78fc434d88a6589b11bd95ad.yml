@@ -1,0 +1,24 @@
+_id: req_68946a3c78fc434d88a6589b11bd95ad
+type: Request
+parentId: fld_1f66e6dc6dbd48f392e19e4f4611df89
+modified: 1686513202347
+created: 1686513202347
+url: '{{ _.baseurl }}/v1/establishments'
+name: FindAll
+description: ''
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1686390057582
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

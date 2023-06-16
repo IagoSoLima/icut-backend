@@ -1,0 +1,43 @@
+_id: req_1fcc8519ac044341a65ff3b9f4259bb6
+type: Request
+parentId: fld_139b497c1c734918a014d28936247dc5
+modified: 1686513227978
+created: 1686513227978
+url: '{{ _.baseurl }}/v1/users/8'
+name: Update
+description: ''
+method: PATCH
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"username": "hugohugo",
+    	"password": "testesteste",
+    	"email": "email@123dsadaaasadd.com",
+    	"firstName": "Teste",
+    	"lastName": "silvafnsaofnsoafnao",
+    	"cpf": "880.046.780-68",
+    	"typeUser": 1
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_e0b7418d48cd4263bec16beb8a0a7a45
+  - id: pair_465298ff688d4deca6ac6a76dc6de90e
+    name: Authorization
+    value: Bearer 9e50a61ff446bd76cb4ace14596ab31c52aff25c
+    description: ''
+    disabled: true
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_5911c39deb324506b54051d814224108',
+    'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 60 %}"
+metaSortKey: -1685061105242
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

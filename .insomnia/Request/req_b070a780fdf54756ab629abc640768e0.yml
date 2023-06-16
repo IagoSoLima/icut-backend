@@ -1,0 +1,23 @@
+_id: req_b070a780fdf54756ab629abc640768e0
+type: Request
+parentId: fld_a001b82deb2642b0b1522f72b00a2355
+modified: 1686414008886
+created: 1686360860517
+url: '{{ _.baseurl }}/v1/schedule/1'
+name: FindById
+description: ''
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: '{{ _.token }}'
+metaSortKey: -1686359731527.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
