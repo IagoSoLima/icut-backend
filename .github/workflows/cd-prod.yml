@@ -58,6 +58,7 @@ jobs:
           key: ${{ secrets.AWS_EC2_SSH_DEV }}
           script: |
             cd /home/ubuntu/app
+            npm install
             npm run prisma:db:push
 
       - name: Transfer files to EC2
