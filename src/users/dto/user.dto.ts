@@ -45,6 +45,7 @@ export class UserDto {
       firstName: data.ds_user_name,
       lastName: data.ds_user_lastname,
       active: data.active,
+      avatarImage: data.avatar_image,
       listTelephones: data.telephone.map(telefone => {
         return UserTelephoneDto.factory(telefone);
       })
