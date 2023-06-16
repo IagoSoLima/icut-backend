@@ -88,7 +88,7 @@ jobs:
         run: sudo apt-get install -y openssh-client
 
       - name: Transfer files to EC2
-        uses: appleboy/scp-action@v3
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: '54.207.235.172'
           username: 'ubuntu'
