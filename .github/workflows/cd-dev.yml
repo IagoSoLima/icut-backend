@@ -70,11 +70,20 @@ jobs:
         run: |
           export PRIVATE_KEY="${{ secrets.AWS_EC2_SSH_DEV  }}"
           export INSTANCE_HOST="54.207.235.172"
-          ssh-keyscan INSTANCE_HOST >> ~/.ssh/known_hosts
+          # Configurar a chave privada para autenticação SSH
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$INSTANCE_HOST" >> ~/.ssh/known_hosts
           ssh -i PRIVATE_KEY ubuntu@INSTANCE_HOST 'cd /home/ubuntu/app && git pull && npm install && npm run build'
 
       - name: Restart application
         run: |
           export PRIVATE_KEY="${{ secrets.AWS_EC2_SSH_DEV  }}"
           export INSTANCE_HOST="54.207.235.172"
+          # Configurar a chave privada para autenticação SSH
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$INSTANCE_HOST" >> ~/.ssh/known_hosts
           ssh -i PRIVATE_KEY ubuntu@INSTANCE_HOST 'pm2 restart app'
