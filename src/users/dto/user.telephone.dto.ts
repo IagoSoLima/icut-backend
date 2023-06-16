@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Telephones } from '@prisma/client';
-import { IsNotEmpty } from 'class-validator';
 import { snakeKeys } from '~/common/utils';
 
 export class UserTelephoneDto {
@@ -17,7 +16,7 @@ export class UserTelephoneDto {
     const formatedData = {
       idTelephone: data.id_telephone,
       telephoneNumber: data.nr_telephone,
-      telephoneDescription: data.nr_telephone
+      telephoneDescription: data.ds_telephone
     };
     return snakeKeys(formatedData);
   }
