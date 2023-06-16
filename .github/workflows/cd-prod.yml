@@ -45,7 +45,7 @@ jobs:
         with:
           host: '54.207.235.172'
           username: 'ubuntu'
-          key: ${{ secrets.AWS_EC2_SSH_DEV }}
+          key: ${{ secrets.AWS_EC2_SSH_PROD }}
           script: |
             cd /home/ubuntu/app
             git pull
@@ -55,7 +55,7 @@ jobs:
         with:
           host: '54.207.235.172'
           username: 'ubuntu'
-          key: ${{ secrets.AWS_EC2_SSH_DEV }}
+          key: ${{ secrets.AWS_EC2_SSH_PROD }}
           script: |
             cd /home/ubuntu/app
             npm install
