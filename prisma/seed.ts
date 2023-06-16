@@ -153,7 +153,7 @@ const main = async () => {
     });
   }
 
-  await prisma.type_payment.deleteMany({});
+  await prisma.type_payment.deleteMany();
   await prisma.type_payment.createMany({
     data: [
       {
@@ -175,7 +175,7 @@ const main = async () => {
     ]
   });
 
-  await prisma.type_service.deleteMany({});
+  await prisma.type_service.deleteMany();
   await prisma.type_service.createMany({
     data: [
       {

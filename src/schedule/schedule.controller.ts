@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -130,14 +129,16 @@ export class ScheduleController {
   ) {
     try {
       const { day, month, year } = query;
-      return this.scheduleService.listDayAvailableService({
+      const response = await this.scheduleService.listDayAvailableService({
         employeeId,
         day,
         month,
         year
       });
+      return response;
     } catch (error) {
-      throw new BadRequestException(error);
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -148,17 +149,20 @@ export class ScheduleController {
   @Get('month-available/:employeeId')
   async listMonthAvailableService(
     @Param('employeeId') employeeId: number,
-    @Query() query: ListDayAvailableServiceQueryDTO
+    @Query() query: ListMonthAvailableServiceQueryDTO
   ) {
     try {
       const { month, year } = query;
-      return this.scheduleService.listProviderMonthAvailabilityService({
-        employeeId,
-        month,
-        year
-      });
+      const response =
+        await this.scheduleService.listProviderMonthAvailabilityService({
+          employeeId,
+          month,
+          year
+        });
+      return response;
     } catch (error) {
-      throw new BadRequestException(error);
+      const arrayError = error.message.split(DEFAULT_JOIN_ARRAY_ERRORS);
+      throw new HttpException(arrayError, HttpStatus.BAD_REQUEST);
     }
   }
 }
